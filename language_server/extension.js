@@ -30,7 +30,17 @@ function add_to_all_words(word, all_words) {
     
 }
 
-function activate(context, all_words) {
+//Helper function to remove strings from the given line (if it is in quotes)
+function remove_strings_from_line(line) {
+    line = line.replace(/'([^']+)'/g, "").trim();
+    return line.replace(/"([^"]+)"/g, "").trim();
+}
+
+function activate(context) {
+
+ ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ //words, that will be suggested all the time   
+
  let command_provider = vscode.languages.registerCompletionItemProvider('NX', {
      provideCompletionItems(document, position, token, context) {
 
@@ -2356,15 +2366,15 @@ function activate(context, all_words) {
 
             for (let i = 0; i < document.lineCount; i++) {
                 let line = document.lineAt(i).text;
+                line = remove_strings_from_line(line);
                 let splittet_line = line.split(" ");
                 if (splittet_line[0].indexOf("#") >= 0) {continue};     //don't read comments
-                for (let i = 0; i < splittet_line.length; i++) {
-                    let checked_word = add_to_all_words(splittet_line[i], all_words);
-                    if (checked_word) {
-                        words.push(checked_word)
-                    }
-                    
-                    
+                for (let j = 0; j < splittet_line.length; j++) {
+                    let word = splittet_line[j];
+                        let checked_word = add_to_all_words(word, all_words);
+                        if (checked_word) {
+                            words.push(checked_word)
+                        }      
             };
         };
 
