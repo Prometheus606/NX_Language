@@ -140,6 +140,29 @@
 			"tk_messageBox ${-message msg}"
 		],
 		"description": "Message Box"
+	},
+	"commentblock": {
+		"prefix": "commentblock",
+		"body": [
+			"#____________________________________________________________________________________________",
+			"# <Documentation>",
+			"#",
+			"# ...",
+			"#",
+			"# <Example>",
+			"#",
+			"#___________________________________________________________________________________________"
+            
+		],
+		"description": "Creates a comment Block"
+	},
+	"first_line": {
+		"prefix": "#!",
+		"body": [
+			"#!/usr/bin/env tclsh"
+            
+		],
+		"description": "Creates the initial Line"
 	}
 	
 }
