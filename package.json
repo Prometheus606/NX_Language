@@ -1,0 +1,93 @@
+{
+	"name": "nx",
+	"displayName": "NX Language",
+	"description": "TCL Language Support with Siemens NX Commands",
+	"version": "0.1.0",
+	"publisher": "Niklas Beitler",
+	"license": "included LICENSE file",
+	"icon": "images/nx-1.png",
+	"engines": {
+		"vscode": "^1.79.1"
+	},
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"galleryBanner": {
+		"color": "#242424",
+		"theme": "dark"
+	},
+	"contributes": {
+		"languages": [
+			{
+				"id": "NX",
+				"aliases": [
+					"Tcl",
+					"nx",
+					"NX",
+					"Nx",
+					"Siemens",
+					"tcl"
+				],
+				"extensions": [
+					".tcl"
+				],
+				"configuration": "./nx.configuration.json"
+			}
+			
+		],
+		"grammars": [
+			{
+				"language": "NX",
+				"scopeName": "source.tcl",
+				"path": "./syntaxes/nx.tmLanguage"
+			}
+		],
+		"snippets": [
+			{
+				"language": "NX",
+				"path": "./snippets/tcl_snippets.json"
+			},
+			{
+				"language": "NX",
+				"path": "./snippets/nx_snippets.json"
+			}
+		]
+
+
+	},
+
+	"activationEvents": [
+		"onLanguage:tcl"
+	],
+	"main": "./language_server/extension.js",
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./language_server/typescript",
+		"lint": "tslint -p ./language_server/typescript",
+		"watch": "tsc -watch -p ./language_server/typescript"
+	},
+	"devDependencies": {
+		"@types/node": "^10.12.18",
+		"tslint": "^5.16.0",
+		"typescript": "^3.5.1",
+		"@types/vscode": "^1.32.0"
+	},
+
+	"__metadata": {
+		"id": "",
+		"publisherId": "",
+		"publisherDisplayName": "Niklas Beitler",
+		"targetPlatform": "undefined",
+		"updated": false,
+		"isPreReleaseVersion": false,
+		"installedTimestamp": 1686813325633,
+		"preRelease": false
+	},
+	"dependencies": {
+		"vsce": "^2.15.0"
+	}
+}
