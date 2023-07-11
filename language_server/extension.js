@@ -5,6 +5,7 @@
 
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const { buffer } = require("node:stream/consumers");
 const vscode = require("vscode");
 function activate(context) {
  let command_provider = vscode.languages.registerCompletionItemProvider('NX', {
@@ -2174,6 +2175,9 @@ function activate(context) {
                             variable = variable.replace(/\[/g, "");
                             variable = variable.replace(/\]/g, "");
                             splittet_line.splice(splittet_line.indexOf("set"), 1);
+                            if (variables.indexOf(variable) >= 0) {
+                            continue
+                            }
                             variables.push(variable)
                         };                        
                     };                   
@@ -2201,6 +2205,9 @@ function activate(context) {
                     let splittet_line = line.split(" ")
                     let procedur_index = splittet_line.indexOf("proc") + 1;
                     let procedur = splittet_line[procedur_index];
+                    if (procedures.indexOf(procedur) >= 0) {
+                    continue
+                    }
                     procedures.push(procedur)
                 };           
             }; 
@@ -2226,8 +2233,9 @@ function activate(context) {
                     for (let i = 0; i < splittet_line.length; i++) {
                         if (splittet_line[i] == "global") {
                             continue
-                        }
-                        else{
+                        }else if (globals.indexOf(splittet_line[i]) >= 0) {
+                            continue
+                        }else {
                             globals.push(splittet_line[i])
                         }
                         
@@ -2259,6 +2267,8 @@ function activate(context) {
                             let buffer_index = splittet_line.indexOf("LIB_GE_command_buffer") + 1;
                             let buffer = splittet_line[buffer_index];
                             if (buffer.indexOf("\{") >= 0) {
+                                continue
+                            }else if (buffers.indexOf(buffer) >= 0) {
                                 continue
                             }else {
                                 buffers.push(buffer)
