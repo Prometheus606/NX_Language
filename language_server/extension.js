@@ -19,9 +19,9 @@ function add_to_all_words(word, all_words) {
         return null;
     }
 
-    word = word.replace(/[\[\]@{}"']/g, "");
+    word = word.replace(/[\[\]{}()$'".@\\\/:!?=&%+*-;,]/g, "").trim();
 
-    if (word.length <= 2 || word.startsWith("%")) {
+    if (word.length <= 2 || word.startsWith("%") || word.startsWith("_") || (Number(word))) {
         return null;
     }
 
@@ -39,6 +39,14 @@ function add_to_all_words(word, all_words) {
 function remove_strings_from_line(line) {
     line = line.replace(/'([^']+)'/g, "").trim();
     return line.replace(/"([^"]+)"/g, "").trim();
+}
+
+//checks if the given word already contain in the list. if so, than will be true returned, else will false be returned.
+function is_double(word, word_list) {
+    for (let i = 0; i < word_list.length; i++) {
+        if (word_list[i].toString() === word.toString()) {return true}     
+    }
+    return false
 }
 
 function activate(context) {
@@ -2216,6 +2224,7 @@ function activate(context) {
             const variables = [];
             const variable_list = [];
 
+
             for (let i = 0; i < document.lineCount; i++) {
                 if (document.lineAt(i).text.indexOf("set ") >= 0) {
                     let line = document.lineAt(i).text;
@@ -2223,17 +2232,16 @@ function activate(context) {
                     line = line.replace(/\]/g, " ");
                     let splittet_line = line.split(" ");
                     for (let j = 0; j < splittet_line.length; j++) {
-                        if (splittet_line[j] == "set") {
+                        if (splittet_line[j] === "set") {
                             let variable_index = splittet_line.indexOf("set") + 1;
                             let variable = splittet_line[variable_index];
-                            variable = variable.replace(/\[/g, "");
-                            variable = variable.replace(/\]/g, "");
+                            variable = variable.replace(/[\[\]$]/g, "").trim();
+                            if (variable.indexOf("::") >= 0 || variable.indexOf("$$") >= 0) {continue} //namespace variablen nicht lesen
                             splittet_line.splice(splittet_line.indexOf("set"), 1);
-                            if (variables.indexOf(variable) >= 0) {
-                            continue
+                            if (!is_double(variable, variables)) {
+                                variables.push(variable)
+                                completionLists.variable_names.push(variable);
                             }
-                            variables.push(variable)
-                            completionLists.variable_names.push(variable);
                         };                        
                     };                   
                 };    
@@ -2254,19 +2262,17 @@ function activate(context) {
             const procedures = [];
             const proc_list = [];
             
-            
 
             for (let i = 0; i < document.lineCount; i++) {
                 if (document.lineAt(i).text.indexOf("proc ") >= 0) {
                     let line = document.lineAt(i).text;
                     let splittet_line = line.split(" ");
                     let procedur_index = splittet_line.indexOf("proc") + 1;
-                    let procedur = splittet_line[procedur_index];
-                    if (procedures.indexOf(procedur) >= 0) {
-                    continue
+                    let procedur = splittet_line[procedur_index].trim();
+                    if (!is_double(procedur, procedures)) {
+                        procedures.push(procedur);
+                        completionLists.proc_names.push(procedur);
                     }
-                    procedures.push(procedur);
-                    completionLists.proc_names.push(procedur);
                 };           
             }; 
 
@@ -2284,18 +2290,18 @@ function activate(context) {
             const globals = [];
             const global_list = [];
 
+
             for (let i = 0; i < document.lineCount; i++) {
                 if (document.lineAt(i).text.indexOf("global ") >= 0) {
                     let line = document.lineAt(i).text;
                     let splittet_line = line.split(" ");
                     for (let i = 0; i < splittet_line.length; i++) {
-                        if (splittet_line[i] == "global") {
+                        const global = splittet_line[i].trim();
+                        if (global === "global" || global.startsWith("$")) {
                             continue
-                        }else if (globals.indexOf(splittet_line[i]) >= 0) {
-                            continue
-                        }else {
-                            globals.push(splittet_line[i])
-                            completionLists.global_names.push(splittet_line[i]);
+                        }else if (!is_double(global, globals)) {
+                            globals.push(global)
+                            completionLists.global_names.push(global);
                         }
                         
                     }
@@ -2322,14 +2328,12 @@ function activate(context) {
                     let line = document.lineAt(i).text;
                     let splittet_line = line.split(" ")
                     for (let i = 0; i < splittet_line.length; i++) {
-                        if (splittet_line[i] == "LIB_GE_command_buffer") {
+                        if (splittet_line[i] === "LIB_GE_command_buffer") {
                             let buffer_index = splittet_line.indexOf("LIB_GE_command_buffer") + 1;
-                            let buffer = splittet_line[buffer_index];
+                            let buffer = splittet_line[buffer_index].trim();
                             if (buffer.indexOf("\{") >= 0) {
                                 continue
-                            }else if (buffers.indexOf(buffer) >= 0) {
-                                continue
-                            }else {
+                            }else if (!is_double(buffer, buffers)) {
                                 buffers.push(buffer);
                                 completionLists.buffer_names.push(buffer);
                             }
@@ -2355,6 +2359,7 @@ function activate(context) {
 
     const words_provider = vscode.languages.registerCompletionItemProvider('NX', {
         provideCompletionItems(document, position) {
+            
 
             const word_list = [];
             const words = [];
@@ -2372,31 +2377,36 @@ function activate(context) {
             "mom_kin_read_ahead_next_motion", "mom_kin_reengage_distance", "mom_kin_retract_plane", "mom_kin_rotary_reengage_feedrate", "mom_kin_spindle_axis", "mom_kin_tool_change_time", "mom_kin_tool_tracking_height", "mom_kin_wire_tilt_output_type", "mom_kin_x_axis_limit", "mom_kin_y_axis_limit", "mom_kin_z_axis_limit", "mom_auxfun", "mom_auxfun_text", "mom_auxfun_text_defined", "mom_axis_position", "mom_axis_position_value", "mom_axis_position_value_defined", "mom_clamp_axis", "mom_clamp_status", "mom_clamp_text", "mom_clamp_text_defined", "mom_coolant_mode", "mom_coolant_text", "mom_coolant_text_defined", "mom_coordinate_output_mode", "mom_cut_wire_text", "mom_cut_wire_text_defined", "mom_cutcom_adjust_register", "mom_cutcom_adjust_register_defined", "mom_cutcom_angle", "mom_cutcom_distance", "mom_cutcom_mode", "mom_cutcom_plane", "mom_cutcom_plane_output_flag", "mom_cutcom_register", "mom_cutcom_register_output_flag", "mom_cutcom_text", "mom_cutcom_text_defined", "mom_cutcom_type", "mom_def_sequence_frequency", 
             "mom_def_sequence_increment", "mom_def_sequence_maximum", "mom_def_sequence_start", "mom_delay_mode", "mom_delay_revs", "mom_delay_text", "mom_delay_text_defined", "mom_delay_value", "mom_flush_guides", "mom_flush_pressure", "mom_flush_register", "mom_flush_tank", "mom_flush_tank_text", "mom_flush_tank_text_defined", "mom_head_name", "mom_head_name_defined", "mom_head_text", "mom_head_text_defined", "mom_head_type", "mom_load_tool_number_defined", "mom_lock_axis", "mom_lock_axis_plane", "mom_lock_axis_value", "mom_lock_axis_value_defined", "mom_modes_text", "mom_modes_text_defined", "mom_number_of_ranges", "mom_operator_message", "mom_operator_message_defined", "mom_opskip_text", "mom_opskip_text_defined", "mom_opstop_text", "mom_opstop_text_defined", "mom_origin", "mom_origin_text", "mom_origin_text_defined", "mom_overide_oper_param", "mom_parallel_to_axis", "mom_power_text", "mom_power_text_defined", "mom_power_value", "mom_pprint", "mom_pprint_defined", "mom_prefun", "mom_prefun_text", "mom_prefun_text_defined", 
             "mom_rotate_axis_type", "mom_rotation_angle", "mom_rotation_angle_defined", "mom_rotation_direction", "mom_rotation_mode", "mom_rotation_reference_mode", "mom_rotation_text", "mom_rotation_text_defined", "mom_seqnum", "mom_sequence_frequency", "mom_sequence_increment", "mom_sequence_mode", "mom_sequence_number", "mom_sequence_text", "mom_sequence_text_defined", "mom_spindle_direction", "mom_spindle_maximum_rpm", "mom_spindle_maximum_rpm_defined", "mom_spindle_mode", "mom_spindle_range", "mom_spindle_range_defined", "mom_spindle_rpm", "mom_spindle_speed", "mom_spindle_speed_defined", "mom_spindle_text", "mom_spindle_text_defined", "mom_stop_text", "mom_stop_text_defined", "mom_tool_adj_reg_defined", "mom_tool_adjust_register", "mom_tool_change_type", "mom_tool_head", "mom_tool_number", "mom_tool_use", "mom_translate", "mom_work_coordinate_number", "after", "append", "array", "auto_execok", "auto_import", "auto_load", "auto_mkindex", "auto_mkindex_old", "auto_qualify", "auto_reset", "bgerror", "binary", "cd", "clock", "close", "concat", "dde", "encoding", "eof", "error", "eval", "exec", "expr", "fblocked", "fconfigure", "fcopy", "file", "fileevent", "filename", "flush", "format", "gets", "glob", "global", "history", "http", "incr", "info", "interp", "join", "lappend", "library", "lindex", "linsert", "list", "llength", "load", "lrange", "lreplace", "lsearch", "lset", "lsort", "memory", "msgcat", "namespace", "open", "package", "parray", "pid", "pkg::create", "pkg_mkIndex", "proc", "puts", "pwd", "range", "regsub", "re_syntax", "read", "registry", "rename", "resource", "scan", "seek", "set", "socket", "SafeBase", "source", "split", "string", "subst", "Tcl", "tcl_endOfWord", "tcl_findLibrary", "tcl_startOfNextWord", "tcl_startOfPreviousWord", "tcl_wordBreakAfter", "tcl_wordBreakBefore", "tcltest", "tclvars", "tell", "time", "trace", "unknown", "unset", "update", "uplevel", "upvar", "variable", "vwait", "regexp", "regsub",
-            "format", "scan", "seconds", "require", "provide", "split", "rename", "dirname", "is directory", "join", "exists", "type", "delete", "size", "readable", "writeable", "copy", "mkdir", "tail", "is file", "extension", "trim", "compare", "index", "reverse", "tolower", "toupper", "totitle", "length", "repeat", "match", "range", "replace", "map", "is lower", "is upper", "is ascii", "is digit", "is alpha", "is integer", "is alnum", "is double", "script", "body", "commands", "args", "default", "errorstack", "globals", "procs", "vars", "version"];
+            "format", "scan", "seconds", "require", "provide", "split", "rename", "dirname", "is directory", "join", "exists", "type", "delete", "size", "readable", "writeable", "copy", "mkdir", "tail", "is file", "extension", "trim", "compare", "index", "reverse", "tolower", "toupper", "totitle", "length", "repeat", "match", "range", "replace", "map", "is lower", "is upper", "is ascii", "is digit", "is alpha", "is integer", "is alnum", "is double", "script", "body", "commands", "args", "default", "errorstack", "globals", "procs", "vars", "version", "-all", "-format", "-exact", "-force", "-observer", "-ersioncxanguageode"];
 
             //combined all word lists in one big list
             const all_words = all_words_fix.concat(completionLists.variable_names, completionLists.proc_names, completionLists.global_names, completionLists.buffer_names) 
+                
+            //get current word, for not suggesting it
+            //let current_word = document.lineAt(position).text.substr(0, position.character).split(" ");
+            //current_word = current_word[current_word.length -1]
 
-            for (let i = 0; i < document.lineCount; i++) {
-                let line = document.lineAt(i).text;
-                line = remove_strings_from_line(line);
-                let splittet_line = line.split(" ");
-                if (splittet_line[0].indexOf("#") >= 0) {continue};     //don't read comments
-                for (let j = 0; j < splittet_line.length; j++) {
-                    let word = splittet_line[j];
+                for (let i = 0; i < document.lineCount; i++) {
+                    let line = document.lineAt(i).text;
+                    line = remove_strings_from_line(line);
+                    let splittet_line = line.split(" ");
+                    if (splittet_line[0].indexOf("#") >= 0) {continue};     //don't read comments
+                    for (let j = 0; j < splittet_line.length; j++) {
+                        let word = splittet_line[j].trim();
                         let checked_word = add_to_all_words(word, all_words);
                         if (checked_word) {
                             words.push(checked_word)
                         }      
-            };
-        };
+                    };
+                };
 
-            for (let i = 0; i < words.length; i++) { 
-                word_list.push(new vscode.CompletionItem(words[i], vscode.CompletionItemKind.Text))
-            };
+                for (let h = 0; h < words.length; h++) { 
+                    word_list.push(new vscode.CompletionItem(words[h], vscode.CompletionItemKind.Text))
+                };
 
             return word_list
         }
+    
     });
 
 
