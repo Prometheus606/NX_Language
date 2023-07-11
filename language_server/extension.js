@@ -368,7 +368,7 @@ function activate(context) {
     // and if so then complete with the vec commands.
     let linePrefix = document.lineAt(position).text.substr(0, position.character);
     if (!linePrefix.endsWith('EQ')) {
-        return undefined;
+        //return undefined;
     }
 
 
@@ -404,7 +404,7 @@ function activate(context) {
         // and if so then complete with the vec commands.
         let linePrefix = document.lineAt(position).text.substr(0, position.character);
         if (!linePrefix.endsWith('VEC')) {
-            return undefined;
+            //return undefined;
         }
 
             const Vec3Add = new vscode.CompletionItem('VEC3_add ', vscode.CompletionItemKind.Interface);
@@ -476,7 +476,7 @@ function activate(context) {
         // and if so then complete with the vec commands.
         let linePrefix = document.lineAt(position).text.substr(0, position.character);
         if (!linePrefix.endsWith('MTX')) {
-            return undefined;
+            //return undefined;
         }
 
 
@@ -528,7 +528,7 @@ function activate(context) {
             // and if so then complete with the mom variables.
             let linePrefix = document.lineAt(position).text.substr(0, position.character);
             if (!linePrefix.endsWith('mom')) {
-                return undefined;
+                //return undefined;
             }
 
             //mom Variables
@@ -1165,7 +1165,7 @@ function activate(context) {
             // and if so then complete with the package methods.
             let linePrefix = document.lineAt(position).text.substr(0, position.character);
             if (!linePrefix.endsWith('MOM')) {
-                return undefined;
+                //return undefined;
             }
 
             //MOM Commands
@@ -1329,7 +1329,7 @@ function activate(context) {
             // and if so then complete with the package methods.
             let linePrefix = document.lineAt(position).text.substr(0, position.character);
             if (!linePrefix.endsWith('LIB')) {
-                return undefined;
+                //return undefined;
             }
 
             //LIB Commands
