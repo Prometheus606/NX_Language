@@ -9,6 +9,11 @@ const vscode = require("vscode");
 
 
 function add_to_all_words(word, all_words) {
+//first, the given word is checked. if it is not a string, or the length is less than 2, nothing happens.
+//if special characters in the string, they will be removed
+//if the given word not contains in the all_words list, it will append there and the word will be returned
+//the return word will suggest in intellisense
+//the all_word list contains all the suggested words, so that no word will be double
 
     if (typeof word !== "string") {
         return null;
@@ -1781,7 +1786,8 @@ function activate(context) {
     }, "B" // triggered whenever a ' ' is being typed
     );
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//provider for special words. if they are tipped in and the trigger character (space key), a list of options pop up
 
     const string_provider = vscode.languages.registerCompletionItemProvider('NX', {
         provideCompletionItems(document, position) {
@@ -2190,10 +2196,13 @@ function activate(context) {
 //          }
 //        }
 //      });
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //regognize and suggest variables and prozedures
 
     const completionLists = {
+        //lists for the names. they are needed for avoid double intellisense items. they will be filled in the matching provider
         variable_names: [],
         proc_names: [],
         global_names: [],
@@ -2350,6 +2359,7 @@ function activate(context) {
             const word_list = [];
             const words = [];
 
+            //words, that be all the time in the list, because they are suggestet any time
             const all_words_fix = ["if", "while", "for", "catch", "return", "break", "continue", "switch", "exit", "foreach", "try", "on error", "default", "then", "elseif", "else", "LIB_GE_ui", "LIB_GE_cleanup_list", "LIB_GE_format_path_names", "LIB_GE_sort_value", "LIB_GE_is_path", "LIB_GE_is_unc_path", "LIB_GE_set", "LIB_GE_lappend", "LIB_GE_ask_type_subtype", "LIB_GE_read_expression_value", "LIB_GE_message", "LIB_GE_truncate_line", "LIB_GE_MSG", "LIB_GE_string_toupper", "LIB_GE_string_range_toupper", 
             "LIB_GE_replace_special_characters", "LIB_GE_comment_convert", "LIB_GE_error_message", "LIB_GE_abort_message", "LIB_GE_message_dialog", "LIB_GE_wish", "LIB_GE_read_database", "LIB_GE_copy_var_range", "LIB_GE_time", "LIB_GE_date", "LIB_GE_command_buffer", "LIB_GE_command_buffer_output", "LIB_GE_string_append", "LIB_GE_create_json_array", "LIB_GE_command_buffer_edit_insert", "LIB_GE_command_buffer_edit_remove", "LIB_GE_command_buffer_edit_move", "LIB_GE_command_buffer_edit_replace", "LIB_GE_command_buffer_edit_append", "LIB_GE_command_buffer_edit_prepend", 
             "LIB_GE_snapshot", "LIB_GE_CONF_set_property_access", "LIB_GE_CONF_set_property_datatype", "LIB_GE_CONF_set_property_ui", "LIB_GE_CONF_add_chain", "LIB_GE_CONF_set_property_options", "LIB_CONF_prop_custom_proc_body", "LIB_CONF_do_prop_custom_proc", "LIB_GE_generate_chain_selection_condition_vars", "LIB_FH_format_database", "LIB_FH_create_directory", "LIB_FH_search_path_recursively", "LIB_FH_search_file_glob", "LIB_FH_file_to_list", "LIB_FH_file_writable", "LIB_FH_list_to_file", "LIB_FH_file_to_list_line_numbers", "LIB_FH_create_file", "LIB_FH_cleanup_directory", "LIB_FH_open_file", "LIB_FH_output_literal", "LIB_FH_escape_special_characters", "LIB_FH_reverse_escape_special_characters", "LIB_SPF_abort_postrun", 
@@ -2364,6 +2374,7 @@ function activate(context) {
             "mom_rotate_axis_type", "mom_rotation_angle", "mom_rotation_angle_defined", "mom_rotation_direction", "mom_rotation_mode", "mom_rotation_reference_mode", "mom_rotation_text", "mom_rotation_text_defined", "mom_seqnum", "mom_sequence_frequency", "mom_sequence_increment", "mom_sequence_mode", "mom_sequence_number", "mom_sequence_text", "mom_sequence_text_defined", "mom_spindle_direction", "mom_spindle_maximum_rpm", "mom_spindle_maximum_rpm_defined", "mom_spindle_mode", "mom_spindle_range", "mom_spindle_range_defined", "mom_spindle_rpm", "mom_spindle_speed", "mom_spindle_speed_defined", "mom_spindle_text", "mom_spindle_text_defined", "mom_stop_text", "mom_stop_text_defined", "mom_tool_adj_reg_defined", "mom_tool_adjust_register", "mom_tool_change_type", "mom_tool_head", "mom_tool_number", "mom_tool_use", "mom_translate", "mom_work_coordinate_number", "after", "append", "array", "auto_execok", "auto_import", "auto_load", "auto_mkindex", "auto_mkindex_old", "auto_qualify", "auto_reset", "bgerror", "binary", "cd", "clock", "close", "concat", "dde", "encoding", "eof", "error", "eval", "exec", "expr", "fblocked", "fconfigure", "fcopy", "file", "fileevent", "filename", "flush", "format", "gets", "glob", "global", "history", "http", "incr", "info", "interp", "join", "lappend", "library", "lindex", "linsert", "list", "llength", "load", "lrange", "lreplace", "lsearch", "lset", "lsort", "memory", "msgcat", "namespace", "open", "package", "parray", "pid", "pkg::create", "pkg_mkIndex", "proc", "puts", "pwd", "range", "regsub", "re_syntax", "read", "registry", "rename", "resource", "scan", "seek", "set", "socket", "SafeBase", "source", "split", "string", "subst", "Tcl", "tcl_endOfWord", "tcl_findLibrary", "tcl_startOfNextWord", "tcl_startOfPreviousWord", "tcl_wordBreakAfter", "tcl_wordBreakBefore", "tcltest", "tclvars", "tell", "time", "trace", "unknown", "unset", "update", "uplevel", "upvar", "variable", "vwait", "regexp", "regsub",
             "format", "scan", "seconds", "require", "provide", "split", "rename", "dirname", "is directory", "join", "exists", "type", "delete", "size", "readable", "writeable", "copy", "mkdir", "tail", "is file", "extension", "trim", "compare", "index", "reverse", "tolower", "toupper", "totitle", "length", "repeat", "match", "range", "replace", "map", "is lower", "is upper", "is ascii", "is digit", "is alpha", "is integer", "is alnum", "is double", "script", "body", "commands", "args", "default", "errorstack", "globals", "procs", "vars", "version"];
 
+            //combined all word lists in one big list
             const all_words = all_words_fix.concat(completionLists.variable_names, completionLists.proc_names, completionLists.global_names, completionLists.buffer_names) 
 
             for (let i = 0; i < document.lineCount; i++) {
@@ -2383,7 +2394,6 @@ function activate(context) {
             for (let i = 0; i < words.length; i++) { 
                 word_list.push(new vscode.CompletionItem(words[i], vscode.CompletionItemKind.Text))
             };
-        
 
             return word_list
         }
