@@ -12,11 +12,12 @@ Including so far:
 - NX MOM events autocomplete
 - NX buffer commands autocomplete
 - NX Snippets
-- procedures and variables regognization and autocomplete
+- procedures, globals, buffer and variables regognization and autocomplete
+- all words regognization and autocomplete
 
-For Highlighting the NX commands, you have to change the "settings.json" file.
-You find it in the search bar above. Type in: >Preferences: Open User Settings (JSON)
-Copy the following code inside this file:
+For Highlighting the NX commands, you have to change the "settings.json" file.   
+You find it in the search bar above. Type in: >Preferences: Open User Settings (JSON)   
+Copy the following code inside this file:   
 
 
 "editor.tokenColorCustomizations": {
@@ -34,8 +35,8 @@ Copy the following code inside this file:
                 }
             }
         ]
-    }
+    }   
 
 
-Author: Niklas Beitler
-Date: 29. june 2023
+Author: Niklas Beitler   
+Date: 06. july 2023
