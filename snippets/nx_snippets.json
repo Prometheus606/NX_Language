@@ -4,15 +4,15 @@
 		"prefix": "newPointProperty",
 		"body": [
             "set id \"PointPorperty\"",
-			"\tset $$id \"0,0,0\"",
-			"\tset options($$id)        {Origin|Specify}",
-			"\tset options_ids($$id)    {0,0,0|*VALUE*}",
-			"\tset datatype($$id)       \"POINT\"",
-			"\tset access($$id)         222",
-			"\tset dialog($$id)         {{Point Property}}",
-			"\tset descr($$id)          {{For setting up the origin or a specific point}}",
-			"\tset ui_parent($$id)      \"GroupObjectName\"",
-			"\tset ui_sequence($$id)    -1",
+			"\tset \\$id \"0,0,0\"",
+			"\tset options(\\$id)        {Origin|Specify}",
+			"\tset options_ids(\\$id)    {0,0,0|*VALUE*}",
+			"\tset datatype(\\$id)       \"POINT\"",
+			"\tset access(\\$id)         222",
+			"\tset dialog(\\$id)         {{Point Property}}",
+			"\tset descr(\\$id)          {{For setting up the origin or a specific point}}",
+			"\tset ui_parent(\\$id)      \"GroupObjectName\"",
+			"\tset ui_sequence(\\$id)    -1",
 			"$0"
 		],
 		"description": "Creates the template code for a point property."
@@ -23,15 +23,15 @@
 		"prefix": "newVektorProperty",
 		"body": [
             "set id \"VectorPorperty\"",
-			"\tset $$id \"0,1,0\"",
-			"\tset options($$id)        {0,1,0|Custom Vector}",
-			"\tset options_ids($$id)    {0,1,0|*VEKTOR*}",
-			"\tset datatype($$id)       \"VEKTOR\"",
-			"\tset access($$id)         222",
-			"\tset dialog($$id)         {{Vector Property}}",
-			"\tset descr($$id)          {{A 3DVector Property}}",
-			"\tset ui_parent($$id)      \"GroupObjectName\"",
-			"\tset ui_sequence($$id)    -1",
+			"\tset \\$id \"0,1,0\"",
+			"\tset options(\\$id)        {0,1,0|Custom Vector}",
+			"\tset options_ids(\\$id)    {0,1,0|*VEKTOR*}",
+			"\tset datatype(\\$id)       \"VEKTOR\"",
+			"\tset access(\\$id)         222",
+			"\tset dialog(\\$id)         {{Vector Property}}",
+			"\tset descr(\\$id)          {{A 3DVector Property}}",
+			"\tset ui_parent(\\$id)      \"GroupObjectName\"",
+			"\tset ui_sequence(\\$id)    -1",
 			"$0"
 		],
 		"description": "Creates the template code for a vector property."
@@ -40,15 +40,15 @@
 		"prefix": "newDoubleProperty",
 		"body": [
             "set id \"DoubleProperty\"",
-			"\tset $$id 0.001",
-			"\tset options($$id)        {Fine|Coarse|Custom}",
-			"\tset options_ids($$id)    {0.001|0.02|*VALUE*}",
-			"\tset datatype($$id)       \"DOUBLE\"",
-			"\tset access($$id)         222",
-			"\tset dialog($$id)         {{Double Property}}",
-			"\tset descr($$id)          {{A numeric Property}}",
-			"\tset ui_parent($$id)      \"GroupObjectName\"",
-			"\tset ui_sequence($$id)    -1",
+			"\tset \\$id 0.001",
+			"\tset options(\\$id)        {Fine|Coarse|Custom}",
+			"\tset options_ids(\\$id)    {0.001|0.02|*VALUE*}",
+			"\tset datatype(\\$id)       \"DOUBLE\"",
+			"\tset access(\\$id)         222",
+			"\tset dialog(\\$id)         {{Double Property}}",
+			"\tset descr(\\$id)          {{A numeric Property}}",
+			"\tset ui_parent(\\$id)      \"GroupObjectName\"",
+			"\tset ui_sequence(\\$id)    -1",
 			"$0"
 		],
 		"description": "Creates the template code for a double property."
@@ -57,15 +57,15 @@
 		"prefix": "newIntProperty",
 		"body": [
             "set id \"IntProperty\"",
-			"\tset $$id 0",
-			"\tset options($$id)        {*Value*}",
-			"\tset options_ids($$id)    {*VALUE*}",
-			"\tset datatype($$id)       \"INT\"",
-			"\tset access($$id)         222",
-			"\tset dialog($$id)         {{Int Property}}",
-			"\tset descr($$id)          {{A numeric Property}}",
-			"\tset ui_parent($$id)      \"GroupObjectName\"",
-			"\tset ui_sequence($$id)    -1",
+			"\tset \\$id 0",
+			"\tset options(\\$id)        {*Value*}",
+			"\tset options_ids(\\$id)    {*VALUE*}",
+			"\tset datatype(\\$id)       \"INT\"",
+			"\tset access(\\$id)         222",
+			"\tset dialog(\\$id)         {{Int Property}}",
+			"\tset descr(\\$id)          {{A numeric Property}}",
+			"\tset ui_parent(\\$id)      \"GroupObjectName\"",
+			"\tset ui_sequence(\\$id)    -1",
 			"$0"
 		],
 		"description": "Creates the template code for an integer property."
@@ -74,14 +74,14 @@
 		"prefix": "newBooleanProperty",
 		"body": [
             "set id \"BooleanProperty\"",
-			"\tset $$id 0",
-			"\tset options($$id)        {OFF|ON}",
-			"\tset options_ids($$id)    {0|1}",
-			"\tset access($$id)         222",
-			"\tset dialog($$id)         {{Boolean Property}}",
-			"\tset descr($$id)          {{A False or True Property}}",
-			"\tset ui_parent($$id)      \"GroupObjectName\"",
-			"\tset ui_sequence($$id)    -1",
+			"\tset \\$id 0",
+			"\tset options(\\$id)        {OFF|ON}",
+			"\tset options_ids(\\$id)    {0|1}",
+			"\tset access(\\$id)         222",
+			"\tset dialog(\\$id)         {{Boolean Property}}",
+			"\tset descr(\\$id)          {{A False or True Property}}",
+			"\tset ui_parent(\\$id)      \"GroupObjectName\"",
+			"\tset ui_sequence(\\$id)    -1",
 			"$0"
 		],
 		"description": "Creates the template code for a boolean property.."
@@ -90,15 +90,15 @@
 		"prefix": "newStringProperty",
 		"body": [
             "set id \"StringProperty\"",
-			"\tset $$id \"Value\"",
-			"\tset options($$id)        {*Value*}",
-			"\tset options_ids($$id)    {*VALUE*}",
-			"\tset datatype($$id)       \"STRING\"",
-			"\tset access($$id)         222",
-			"\tset dialog($$id)         {{String Property}}",
-			"\tset descr($$id)          {{A alphanumeric Property}}",
-			"\tset ui_parent($$id)      \"GroupObjectName\"",
-			"\tset ui_sequence($$id)    -1",
+			"\tset \\$id \"Value\"",
+			"\tset options(\\$id)        {*Value*}",
+			"\tset options_ids(\\$id)    {*VALUE*}",
+			"\tset datatype(\\$id)       \"STRING\"",
+			"\tset access(\\$id)         222",
+			"\tset dialog(\\$id)         {{String Property}}",
+			"\tset descr(\\$id)          {{A alphanumeric Property}}",
+			"\tset ui_parent(\\$id)      \"GroupObjectName\"",
+			"\tset ui_sequence(\\$id)    -1",
 			"$0"
 		],
 		"description": "Creates the template code for a string property."
@@ -107,15 +107,15 @@
 		"prefix": "newCommandBlockProperty",
 		"body": [
             "set id \"CommandBlockProperty\"",
-			"\tset $$id \"Value\"",
-			"\tset options($$id)        {CommandBlock|Specify}",
-			"\tset options_ids($$id)    {0|*VALUE*}",
-			"\tset datatype($$id)       \"COMMANDBLOCK\"",
-			"\tset access($$id)         222",
-			"\tset dialog($$id)         {{Commandblock Property}}",
-			"\tset descr($$id)          {{A commandblock Property}}",
-			"\tset ui_parent($$id)      \"GroupObjectName\"",
-			"\tset ui_sequence($$id)    -1",
+			"\tset \\$id \"Value\"",
+			"\tset options(\\$id)        {CommandBlock|Specify}",
+			"\tset options_ids(\\$id)    {0|*VALUE*}",
+			"\tset datatype(\\$id)       \"COMMANDBLOCK\"",
+			"\tset access(\\$id)         222",
+			"\tset dialog(\\$id)         {{Commandblock Property}}",
+			"\tset descr(\\$id)          {{A commandblock Property}}",
+			"\tset ui_parent(\\$id)      \"GroupObjectName\"",
+			"\tset ui_sequence(\\$id)    -1",
 			"$0"
 		],
 		"description": "Creates the template code for a commandblock property."
@@ -136,14 +136,14 @@
 		"prefix": "newUINode",
 		"body": [
             "set id \"NodeObjectName\"",
-			"\tset $$id \"0\"",
-			"\tset datatype($$id)       \"NODE\"",
-			"\tset access($$id)         222",
-			"\tset dialog($$id)         {{Node name}}",
-			"\tset descr($$id)          {{Node description}}",
-			"\tset group_status($$id)   0",
-			"\tset ui_parent($$id)      \"root\"",
-			"\tset ui_sequence($$id)    -1",
+			"\tset \\$id \"0\"",
+			"\tset datatype(\\$id)       \"NODE\"",
+			"\tset access(\\$id)         222",
+			"\tset dialog(\\$id)         {{Node name}}",
+			"\tset descr(\\$id)          {{Node description}}",
+			"\tset group_status(\\$id)   0",
+			"\tset ui_parent(\\$id)      \"root\"",
+			"\tset ui_sequence(\\$id)    -1",
 			"$0"
 		],
 		"description": "Creates the template code for a Node Object"
@@ -152,14 +152,14 @@
 		"prefix": "newUIGroup",
 		"body": [
             "set id \"GroupObjectName\"",
-			"\tset $$id \"0\"",
-			"\tset datatype($$id)       \"GROUP\"",
-			"\tset access($$id)         222",
-			"\tset dialog($$id)         {{Group name}}",
-			"\tset descr($$id)          {{Group description}}",
-			"\tset group_status($$id)   0",
-			"\tset ui_parent($$id)      \"NodeObjectName\"",
-			"\tset ui_sequence($$id)    -1",
+			"\tset \\$id \"0\"",
+			"\tset datatype(\\$id)       \"GROUP\"",
+			"\tset access(\\$id)         222",
+			"\tset dialog(\\$id)         {{Group name}}",
+			"\tset descr(\\$id)          {{Group description}}",
+			"\tset group_status(\\$id)   0",
+			"\tset ui_parent(\\$id)      \"NodeObjectName\"",
+			"\tset ui_sequence(\\$id)    -1",
 			"$0"
 		],
 		"description": "Creates the template code for a Node Group"
@@ -176,14 +176,24 @@
 		],
 		"description": "Creates the template code for a UI Object"
 	},
-	"Buffer": {
-		"prefix": "newBuffer",
+	"Buffer1": {
+		"prefix": "newLongBuffer",
 		"body": [
 			"LIB_GE_command_buffer ${var}",
       		"LIB_GE_command_buffer {",
 			  "\t$0",
       		"} @${var}",
       		"LIB_GE_command_buffer_output"
+            
+		],
+		"description": "Creates the template code for a new buffer"
+	},
+	"Buffer2": {
+		"prefix": "newShortBuffer",
+		"body": [
+			"LIB_GE_command_buffer ${var}",
+      		"LIB_GE_command_buffer {if {[llength [info commands ${var}]]} {${var}}} @${var}",
+      		"LIB_GE_command_buffer_output$0"
             
 		],
 		"description": "Creates the template code for a new buffer"

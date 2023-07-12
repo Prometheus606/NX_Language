@@ -9,14 +9,19 @@ const vscode = require("vscode");
 
 
 function add_to_all_words(word, all_words) {
+//first, the given word is checked. if it is not a string, or the length is less than 2, nothing happens.
+//if special characters in the string, they will be removed
+//if the given word not contains in the all_words list, it will append there and the word will be returned
+//the return word will suggest in intellisense
+//the all_word list contains all the suggested words, so that no word will be double
 
     if (typeof word !== "string") {
         return null;
     }
 
-    word = word.replace(/[\[\]@{}"']/g, "");
+    word = word.replace(/[\[\]{}()$'".@\\\/:!?=&%+*-;,]/g, "").trim();
 
-    if (word.length <= 2 || word.startsWith("%")) {
+    if (word.length <= 2 || word.startsWith("%") || word.startsWith("_") || (Number(word))) {
         return null;
     }
 
@@ -30,7 +35,25 @@ function add_to_all_words(word, all_words) {
     
 }
 
-function activate(context, all_words) {
+//Helper function to remove strings from the given line (if it is in quotes)
+function remove_strings_from_line(line) {
+    line = line.replace(/'([^']+)'/g, "").trim();
+    return line.replace(/"([^"]+)"/g, "").trim();
+}
+
+//checks if the given word already contain in the list. if so, than will be true returned, else will false be returned.
+function is_double(word, word_list) {
+    for (let i = 0; i < word_list.length; i++) {
+        if (word_list[i].toString() === word.toString()) {return true}     
+    }
+    return false
+}
+
+function activate(context) {
+
+ ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ //words, that will be suggested all the time   
+
  let command_provider = vscode.languages.registerCompletionItemProvider('NX', {
      provideCompletionItems(document, position, token, context) {
 
@@ -1252,6 +1275,7 @@ function activate(context, all_words) {
             momEnableAddress.documentation = new vscode.MarkdownString("Restores output status for an address that MOM_disable_address suppressed. \nReturns output status to the initial state.\n\nMOM_enable_address (Address)");
 
             const momForce = new vscode.CompletionItem('MOM_force', vscode.CompletionItemKind.Event);
+            momForce.insertText = new vscode.SnippetString('MOM_force once ');
             momForce.documentation = new vscode.MarkdownString("The next time that a block template that contains a\nreference to any of the input address names is evaluated,\nthe word that contains that address will be output regardless\nof its modality attribute.\n\nMOM_force (Always | Once | Off )\n(Address_1 ... Address_n)");
 
             const momForceBlock = new vscode.CompletionItem('MOM_force_block', vscode.CompletionItemKind.Event);
@@ -1327,6 +1351,7 @@ function activate(context, all_words) {
             momSkipHandlerToEvent.documentation = new vscode.MarkdownString("This command will skip the execution of the event handler\nuntil the given event is encountered. The condition is reset\nat the start-of-path and when the event is met. Motion\ntypes include Engage, Approach, Firstcut, Retract, Return, Rapid, Cut, Stepover,\nDeparture, Traversal, Sidecut, From, Gohome, and Cycle.\n\nMOM_skip_handler_to_event (event or motion-type)");
 
             const momSuppress = new vscode.CompletionItem('MOM_suppress', vscode.CompletionItemKind.Event);
+            momSuppress.insertText = new vscode.SnippetString('MOM_supress once ');
             momSuppress.documentation = new vscode.MarkdownString("The next time that a block template that contains a\nreference to any of the input address names is evaluated,\nthe word that contains the address will not be output\nregardless of its modality attribute.\n\nMOM_suppress (Always | Once | Off\n) (Address_1 ... &gt");
 
             const momUpdateKinematics = new vscode.CompletionItem('MOM_update_kinematics', vscode.CompletionItemKind.Event);
@@ -1769,7 +1794,8 @@ function activate(context, all_words) {
     }, "B" // triggered whenever a ' ' is being typed
     );
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//provider for special words. if they are tipped in and the trigger character (space key), a list of options pop up
 
     const string_provider = vscode.languages.registerCompletionItemProvider('NX', {
         provideCompletionItems(document, position) {
@@ -2178,10 +2204,13 @@ function activate(context, all_words) {
 //          }
 //        }
 //      });
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //regognize and suggest variables and prozedures
 
     const completionLists = {
+        //lists for the names. they are needed for avoid double intellisense items. they will be filled in the matching provider
         variable_names: [],
         proc_names: [],
         global_names: [],
@@ -2195,6 +2224,7 @@ function activate(context, all_words) {
             const variables = [];
             const variable_list = [];
 
+
             for (let i = 0; i < document.lineCount; i++) {
                 if (document.lineAt(i).text.indexOf("set ") >= 0) {
                     let line = document.lineAt(i).text;
@@ -2202,17 +2232,16 @@ function activate(context, all_words) {
                     line = line.replace(/\]/g, " ");
                     let splittet_line = line.split(" ");
                     for (let j = 0; j < splittet_line.length; j++) {
-                        if (splittet_line[j] == "set") {
+                        if (splittet_line[j] === "set") {
                             let variable_index = splittet_line.indexOf("set") + 1;
                             let variable = splittet_line[variable_index];
-                            variable = variable.replace(/\[/g, "");
-                            variable = variable.replace(/\]/g, "");
+                            variable = variable.replace(/[\[\]$]/g, "").trim();
+                            if (variable.indexOf("::") >= 0 || variable.indexOf("$$") >= 0) {continue} //namespace variablen nicht lesen
                             splittet_line.splice(splittet_line.indexOf("set"), 1);
-                            if (variables.indexOf(variable) >= 0) {
-                            continue
+                            if (!is_double(variable, variables)) {
+                                variables.push(variable)
+                                completionLists.variable_names.push(variable);
                             }
-                            variables.push(variable)
-                            completionLists.variable_names.push(variable);
                         };                        
                     };                   
                 };    
@@ -2233,19 +2262,17 @@ function activate(context, all_words) {
             const procedures = [];
             const proc_list = [];
             
-            
 
             for (let i = 0; i < document.lineCount; i++) {
                 if (document.lineAt(i).text.indexOf("proc ") >= 0) {
                     let line = document.lineAt(i).text;
                     let splittet_line = line.split(" ");
                     let procedur_index = splittet_line.indexOf("proc") + 1;
-                    let procedur = splittet_line[procedur_index];
-                    if (procedures.indexOf(procedur) >= 0) {
-                    continue
+                    let procedur = splittet_line[procedur_index].trim();
+                    if (!is_double(procedur, procedures)) {
+                        procedures.push(procedur);
+                        completionLists.proc_names.push(procedur);
                     }
-                    procedures.push(procedur);
-                    completionLists.proc_names.push(procedur);
                 };           
             }; 
 
@@ -2263,18 +2290,18 @@ function activate(context, all_words) {
             const globals = [];
             const global_list = [];
 
+
             for (let i = 0; i < document.lineCount; i++) {
                 if (document.lineAt(i).text.indexOf("global ") >= 0) {
                     let line = document.lineAt(i).text;
                     let splittet_line = line.split(" ");
                     for (let i = 0; i < splittet_line.length; i++) {
-                        if (splittet_line[i] == "global") {
+                        const global = splittet_line[i].trim();
+                        if (global === "global" || global.startsWith("$")) {
                             continue
-                        }else if (globals.indexOf(splittet_line[i]) >= 0) {
-                            continue
-                        }else {
-                            globals.push(splittet_line[i])
-                            completionLists.global_names.push(splittet_line[i]);
+                        }else if (!is_double(global, globals)) {
+                            globals.push(global)
+                            completionLists.global_names.push(global);
                         }
                         
                     }
@@ -2301,14 +2328,12 @@ function activate(context, all_words) {
                     let line = document.lineAt(i).text;
                     let splittet_line = line.split(" ")
                     for (let i = 0; i < splittet_line.length; i++) {
-                        if (splittet_line[i] == "LIB_GE_command_buffer") {
+                        if (splittet_line[i] === "LIB_GE_command_buffer") {
                             let buffer_index = splittet_line.indexOf("LIB_GE_command_buffer") + 1;
-                            let buffer = splittet_line[buffer_index];
+                            let buffer = splittet_line[buffer_index].trim();
                             if (buffer.indexOf("\{") >= 0) {
                                 continue
-                            }else if (buffers.indexOf(buffer) >= 0) {
-                                continue
-                            }else {
+                            }else if (!is_double(buffer, buffers)) {
                                 buffers.push(buffer);
                                 completionLists.buffer_names.push(buffer);
                             }
@@ -2334,10 +2359,12 @@ function activate(context, all_words) {
 
     const words_provider = vscode.languages.registerCompletionItemProvider('NX', {
         provideCompletionItems(document, position) {
+            
 
             const word_list = [];
             const words = [];
 
+            //words, that be all the time in the list, because they are suggestet any time
             const all_words_fix = ["if", "while", "for", "catch", "return", "break", "continue", "switch", "exit", "foreach", "try", "on error", "default", "then", "elseif", "else", "LIB_GE_ui", "LIB_GE_cleanup_list", "LIB_GE_format_path_names", "LIB_GE_sort_value", "LIB_GE_is_path", "LIB_GE_is_unc_path", "LIB_GE_set", "LIB_GE_lappend", "LIB_GE_ask_type_subtype", "LIB_GE_read_expression_value", "LIB_GE_message", "LIB_GE_truncate_line", "LIB_GE_MSG", "LIB_GE_string_toupper", "LIB_GE_string_range_toupper", 
             "LIB_GE_replace_special_characters", "LIB_GE_comment_convert", "LIB_GE_error_message", "LIB_GE_abort_message", "LIB_GE_message_dialog", "LIB_GE_wish", "LIB_GE_read_database", "LIB_GE_copy_var_range", "LIB_GE_time", "LIB_GE_date", "LIB_GE_command_buffer", "LIB_GE_command_buffer_output", "LIB_GE_string_append", "LIB_GE_create_json_array", "LIB_GE_command_buffer_edit_insert", "LIB_GE_command_buffer_edit_remove", "LIB_GE_command_buffer_edit_move", "LIB_GE_command_buffer_edit_replace", "LIB_GE_command_buffer_edit_append", "LIB_GE_command_buffer_edit_prepend", 
             "LIB_GE_snapshot", "LIB_GE_CONF_set_property_access", "LIB_GE_CONF_set_property_datatype", "LIB_GE_CONF_set_property_ui", "LIB_GE_CONF_add_chain", "LIB_GE_CONF_set_property_options", "LIB_CONF_prop_custom_proc_body", "LIB_CONF_do_prop_custom_proc", "LIB_GE_generate_chain_selection_condition_vars", "LIB_FH_format_database", "LIB_FH_create_directory", "LIB_FH_search_path_recursively", "LIB_FH_search_file_glob", "LIB_FH_file_to_list", "LIB_FH_file_writable", "LIB_FH_list_to_file", "LIB_FH_file_to_list_line_numbers", "LIB_FH_create_file", "LIB_FH_cleanup_directory", "LIB_FH_open_file", "LIB_FH_output_literal", "LIB_FH_escape_special_characters", "LIB_FH_reverse_escape_special_characters", "LIB_SPF_abort_postrun", 
@@ -2350,31 +2377,36 @@ function activate(context, all_words) {
             "mom_kin_read_ahead_next_motion", "mom_kin_reengage_distance", "mom_kin_retract_plane", "mom_kin_rotary_reengage_feedrate", "mom_kin_spindle_axis", "mom_kin_tool_change_time", "mom_kin_tool_tracking_height", "mom_kin_wire_tilt_output_type", "mom_kin_x_axis_limit", "mom_kin_y_axis_limit", "mom_kin_z_axis_limit", "mom_auxfun", "mom_auxfun_text", "mom_auxfun_text_defined", "mom_axis_position", "mom_axis_position_value", "mom_axis_position_value_defined", "mom_clamp_axis", "mom_clamp_status", "mom_clamp_text", "mom_clamp_text_defined", "mom_coolant_mode", "mom_coolant_text", "mom_coolant_text_defined", "mom_coordinate_output_mode", "mom_cut_wire_text", "mom_cut_wire_text_defined", "mom_cutcom_adjust_register", "mom_cutcom_adjust_register_defined", "mom_cutcom_angle", "mom_cutcom_distance", "mom_cutcom_mode", "mom_cutcom_plane", "mom_cutcom_plane_output_flag", "mom_cutcom_register", "mom_cutcom_register_output_flag", "mom_cutcom_text", "mom_cutcom_text_defined", "mom_cutcom_type", "mom_def_sequence_frequency", 
             "mom_def_sequence_increment", "mom_def_sequence_maximum", "mom_def_sequence_start", "mom_delay_mode", "mom_delay_revs", "mom_delay_text", "mom_delay_text_defined", "mom_delay_value", "mom_flush_guides", "mom_flush_pressure", "mom_flush_register", "mom_flush_tank", "mom_flush_tank_text", "mom_flush_tank_text_defined", "mom_head_name", "mom_head_name_defined", "mom_head_text", "mom_head_text_defined", "mom_head_type", "mom_load_tool_number_defined", "mom_lock_axis", "mom_lock_axis_plane", "mom_lock_axis_value", "mom_lock_axis_value_defined", "mom_modes_text", "mom_modes_text_defined", "mom_number_of_ranges", "mom_operator_message", "mom_operator_message_defined", "mom_opskip_text", "mom_opskip_text_defined", "mom_opstop_text", "mom_opstop_text_defined", "mom_origin", "mom_origin_text", "mom_origin_text_defined", "mom_overide_oper_param", "mom_parallel_to_axis", "mom_power_text", "mom_power_text_defined", "mom_power_value", "mom_pprint", "mom_pprint_defined", "mom_prefun", "mom_prefun_text", "mom_prefun_text_defined", 
             "mom_rotate_axis_type", "mom_rotation_angle", "mom_rotation_angle_defined", "mom_rotation_direction", "mom_rotation_mode", "mom_rotation_reference_mode", "mom_rotation_text", "mom_rotation_text_defined", "mom_seqnum", "mom_sequence_frequency", "mom_sequence_increment", "mom_sequence_mode", "mom_sequence_number", "mom_sequence_text", "mom_sequence_text_defined", "mom_spindle_direction", "mom_spindle_maximum_rpm", "mom_spindle_maximum_rpm_defined", "mom_spindle_mode", "mom_spindle_range", "mom_spindle_range_defined", "mom_spindle_rpm", "mom_spindle_speed", "mom_spindle_speed_defined", "mom_spindle_text", "mom_spindle_text_defined", "mom_stop_text", "mom_stop_text_defined", "mom_tool_adj_reg_defined", "mom_tool_adjust_register", "mom_tool_change_type", "mom_tool_head", "mom_tool_number", "mom_tool_use", "mom_translate", "mom_work_coordinate_number", "after", "append", "array", "auto_execok", "auto_import", "auto_load", "auto_mkindex", "auto_mkindex_old", "auto_qualify", "auto_reset", "bgerror", "binary", "cd", "clock", "close", "concat", "dde", "encoding", "eof", "error", "eval", "exec", "expr", "fblocked", "fconfigure", "fcopy", "file", "fileevent", "filename", "flush", "format", "gets", "glob", "global", "history", "http", "incr", "info", "interp", "join", "lappend", "library", "lindex", "linsert", "list", "llength", "load", "lrange", "lreplace", "lsearch", "lset", "lsort", "memory", "msgcat", "namespace", "open", "package", "parray", "pid", "pkg::create", "pkg_mkIndex", "proc", "puts", "pwd", "range", "regsub", "re_syntax", "read", "registry", "rename", "resource", "scan", "seek", "set", "socket", "SafeBase", "source", "split", "string", "subst", "Tcl", "tcl_endOfWord", "tcl_findLibrary", "tcl_startOfNextWord", "tcl_startOfPreviousWord", "tcl_wordBreakAfter", "tcl_wordBreakBefore", "tcltest", "tclvars", "tell", "time", "trace", "unknown", "unset", "update", "uplevel", "upvar", "variable", "vwait", "regexp", "regsub",
-            "format", "scan", "seconds", "require", "provide", "split", "rename", "dirname", "is directory", "join", "exists", "type", "delete", "size", "readable", "writeable", "copy", "mkdir", "tail", "is file", "extension", "trim", "compare", "index", "reverse", "tolower", "toupper", "totitle", "length", "repeat", "match", "range", "replace", "map", "is lower", "is upper", "is ascii", "is digit", "is alpha", "is integer", "is alnum", "is double", "script", "body", "commands", "args", "default", "errorstack", "globals", "procs", "vars", "version"];
+            "format", "scan", "seconds", "require", "provide", "split", "rename", "dirname", "is directory", "join", "exists", "type", "delete", "size", "readable", "writeable", "copy", "mkdir", "tail", "is file", "extension", "trim", "compare", "index", "reverse", "tolower", "toupper", "totitle", "length", "repeat", "match", "range", "replace", "map", "is lower", "is upper", "is ascii", "is digit", "is alpha", "is integer", "is alnum", "is double", "script", "body", "commands", "args", "default", "errorstack", "globals", "procs", "vars", "version", "-all", "-format", "-exact", "-force", "-observer", "-ersioncxanguageode"];
 
+            //combined all word lists in one big list
             const all_words = all_words_fix.concat(completionLists.variable_names, completionLists.proc_names, completionLists.global_names, completionLists.buffer_names) 
+                
+            //get current word, for not suggesting it
+            //let current_word = document.lineAt(position).text.substr(0, position.character).split(" ");
+            //current_word = current_word[current_word.length -1]
 
-            for (let i = 0; i < document.lineCount; i++) {
-                let line = document.lineAt(i).text;
-                let splittet_line = line.split(" ");
-                if (splittet_line[0].indexOf("#") >= 0) {continue};     //don't read comments
-                for (let i = 0; i < splittet_line.length; i++) {
-                    let checked_word = add_to_all_words(splittet_line[i], all_words);
-                    if (checked_word) {
-                        words.push(checked_word)
-                    }
-                    
-                    
-            };
-        };
+                for (let i = 0; i < document.lineCount; i++) {
+                    let line = document.lineAt(i).text;
+                    line = remove_strings_from_line(line);
+                    let splittet_line = line.split(" ");
+                    if (splittet_line[0].indexOf("#") >= 0) {continue};     //don't read comments
+                    for (let j = 0; j < splittet_line.length; j++) {
+                        let word = splittet_line[j].trim();
+                        let checked_word = add_to_all_words(word, all_words);
+                        if (checked_word) {
+                            words.push(checked_word)
+                        }      
+                    };
+                };
 
-            for (let i = 0; i < words.length; i++) { 
-                word_list.push(new vscode.CompletionItem(words[i], vscode.CompletionItemKind.Text))
-            };
-        
+                for (let h = 0; h < words.length; h++) { 
+                    word_list.push(new vscode.CompletionItem(words[h], vscode.CompletionItemKind.Text))
+                };
 
             return word_list
         }
+    
     });
 
 
