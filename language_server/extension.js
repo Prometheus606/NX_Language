@@ -6,33 +6,23 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode = require("vscode");
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function add_to_all_words(word, all_words) {
 //first, the given word is checked. if it is not a string, or the length is less than 2, nothing happens.
 //if special characters in the string, they will be removed
 //if the given word not contains in the all_words list, it will append there and the word will be returned
 //the return word will suggest in intellisense
 //the all_word list contains all the suggested words, so that no word will be double
-
-    if (typeof word !== "string") {
-        return null;
-    }
-
+function add_to_all_words(word, all_words) {
+    if (typeof word !== "string") {return null}
     word = word.replace(/[\[\]{}()$'".@\\\/:!?=&%+*-;,]/g, "").trim();
-
-    if (word.length <= 2 || word.startsWith("%") || word.startsWith("_") || (Number(word))) {
-        return null;
-    }
-
+    if (word.length <= 2 || word.startsWith("%") || word.startsWith("_") || (Number(word))) {return null;}
     if (!all_words.includes(word)) {
         all_words.push(word);
         return word;
     }
-    
-    return null
-
-    
+    return null 
 }
 
 //Helper function to remove strings from the given line (if it is in quotes)
@@ -49,7 +39,10 @@ function is_double(word, word_list) {
     return false
 }
 
-function activate(context) {
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function activate() {
 
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  //words, that will be suggested all the time   
@@ -2213,8 +2206,8 @@ function activate(context) {
         //lists for the names. they are needed for avoid double intellisense items. they will be filled in the matching provider
         variable_names: [],
         proc_names: [],
-        global_names: [],
-        buffer_names: []
+        buffer_names: [],
+        global_names: []
 
     };
 
@@ -2222,8 +2215,7 @@ function activate(context) {
         provideCompletionItems(document, position) {
 
             const variables = [];
-            const variable_list = [];
-
+            
 
             for (let i = 0; i < document.lineCount; i++) {
                 if (document.lineAt(i).text.indexOf("set ") >= 0) {
@@ -2239,7 +2231,7 @@ function activate(context) {
                             if (variable.indexOf("::") >= 0 || variable.indexOf("$$") >= 0) {continue} //namespace variablen nicht lesen
                             splittet_line.splice(splittet_line.indexOf("set"), 1);
                             if (!is_double(variable, variables)) {
-                                variables.push(variable)
+                                variables.push(variable);
                                 completionLists.variable_names.push(variable);
                             }
                         };                        
@@ -2247,10 +2239,10 @@ function activate(context) {
                 };    
             };
 
+            const variable_list = [];
             for (let i = 0; i < variables.length; i++) { 
                 variable_list.push(new vscode.CompletionItem(variables[i], vscode.CompletionItemKind.Variable))
             }
-
 
             return variable_list
         }
@@ -2260,7 +2252,6 @@ function activate(context) {
         provideCompletionItems(document, position) {
 
             const procedures = [];
-            const proc_list = [];
             
 
             for (let i = 0; i < document.lineCount; i++) {
@@ -2276,6 +2267,7 @@ function activate(context) {
                 };           
             }; 
 
+            const proc_list = [];
             for (let i = 0; i < procedures.length; i++) { 
                 proc_list.push(new vscode.CompletionItem(procedures[i], vscode.CompletionItemKind.Method))
             }
@@ -2288,9 +2280,7 @@ function activate(context) {
         provideCompletionItems(document, position) {
 
             const globals = [];
-            const global_list = [];
-
-
+            
             for (let i = 0; i < document.lineCount; i++) {
                 if (document.lineAt(i).text.indexOf("global ") >= 0) {
                     let line = document.lineAt(i).text;
@@ -2299,8 +2289,8 @@ function activate(context) {
                         const global = splittet_line[i].trim();
                         if (global === "global" || global.startsWith("$")) {
                             continue
-                        }else if (!is_double(global, globals)) {
-                            globals.push(global)
+                        }else if (!is_double(global, globals) && !is_double(global, completionLists.variable_names)) {
+                            globals.push(global);
                             completionLists.global_names.push(global);
                         }
                         
@@ -2309,6 +2299,7 @@ function activate(context) {
                 };           
             }; 
 
+            const global_list = [];
             for (let i = 0; i < globals.length; i++) { 
                 global_list.push(new vscode.CompletionItem(globals[i], vscode.CompletionItemKind.Variable))
             }
@@ -2321,8 +2312,7 @@ function activate(context) {
         provideCompletionItems(document, position) {
 
             const buffers = [];
-            const buffer_list = [];
-
+            
             for (let i = 0; i < document.lineCount; i++) {
                 if (document.lineAt(i).text.indexOf("LIB_GE_command_buffer ") >= 0) {
                     let line = document.lineAt(i).text;
@@ -2344,6 +2334,7 @@ function activate(context) {
                 };           
             }; 
 
+            const buffer_list = [];
             for (let i = 0; i < buffers.length; i++) { 
                 buffer_list.push(new vscode.CompletionItem(buffers[i], vscode.CompletionItemKind.Interface))
             }
@@ -2360,8 +2351,6 @@ function activate(context) {
     const words_provider = vscode.languages.registerCompletionItemProvider('NX', {
         provideCompletionItems(document, position) {
             
-
-            const word_list = [];
             const words = [];
 
             //words, that be all the time in the list, because they are suggestet any time
@@ -2380,7 +2369,7 @@ function activate(context) {
             "format", "scan", "seconds", "require", "provide", "split", "rename", "dirname", "is directory", "join", "exists", "type", "delete", "size", "readable", "writeable", "copy", "mkdir", "tail", "is file", "extension", "trim", "compare", "index", "reverse", "tolower", "toupper", "totitle", "length", "repeat", "match", "range", "replace", "map", "is lower", "is upper", "is ascii", "is digit", "is alpha", "is integer", "is alnum", "is double", "script", "body", "commands", "args", "default", "errorstack", "globals", "procs", "vars", "version", "-all", "-format", "-exact", "-force", "-observer", "-ersioncxanguageode"];
 
             //combined all word lists in one big list
-            const all_words = all_words_fix.concat(completionLists.variable_names, completionLists.proc_names, completionLists.global_names, completionLists.buffer_names) 
+            const all_words = all_words_fix.concat(completionLists.variable_names, completionLists.proc_names, completionLists.buffer_names, completionLists.global_names) 
                 
             //get current word, for not suggesting it
             //let current_word = document.lineAt(position).text.substr(0, position.character).split(" ");
@@ -2400,6 +2389,7 @@ function activate(context) {
                     };
                 };
 
+                const word_list = [];
                 for (let h = 0; h < words.length; h++) { 
                     word_list.push(new vscode.CompletionItem(words[h], vscode.CompletionItemKind.Text))
                 };
