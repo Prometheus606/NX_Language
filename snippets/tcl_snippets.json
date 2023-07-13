@@ -2,7 +2,7 @@
 	 "For Loop": {
 		"prefix": "for",
 		"body": [
-            "for {set ${index} 0} { $${index} < ${length} } { incr ${index} } {",
+            "for {set ${index} 0} { $${index} < [llength $${list}] } { incr ${index} } {",
             "\t$0",
             "}"
 		],
@@ -48,7 +48,7 @@
 		"prefix": ["proc", "newproc"],
 		"body": [
 			"#------------------------------------------------------------",
-            "proc ${name} {${args}} {",
+            "proc ${name} {} {",
 			"#------------------------------------------------------------",
             "\t$0",
             "}"
