@@ -176,23 +176,23 @@
 		],
 		"description": "Creates the template code for a UI Object"
 	},
-	"Buffer1": {
+	"LongBuffer": {
 		"prefix": "newLongBuffer",
 		"body": [
 			"LIB_GE_command_buffer ${var}",
       		"LIB_GE_command_buffer {",
-			  "\t$0",
-      		"} @${var}",
+			  "\n\t$0\n",
+      		"} @_${var}",
       		"LIB_GE_command_buffer_output"
             
 		],
 		"description": "Creates the template code for a new buffer"
 	},
-	"Buffer2": {
+	"ShortBuffer": {
 		"prefix": "newShortBuffer",
 		"body": [
 			"LIB_GE_command_buffer ${var}",
-      		"LIB_GE_command_buffer {if {[llength [info commands ${var}]]} {${var}}} @${var}",
+      		"LIB_GE_command_buffer {if {[llength [info commands ${var}]]} {${var}}} @_${var}",
       		"LIB_GE_command_buffer_output$0"
             
 		],
