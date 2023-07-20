@@ -1804,6 +1804,20 @@ function activate() {
             const string_trim = new vscode.CompletionItem('trim ', vscode.CompletionItemKind.Method);
             string_trim.documentation = new vscode.MarkdownString("Returns a value equal to string except that any leading or trailing characters present in the string given by chars are removed. If chars is not specified then white space is removed\n\nstring trim (string) (chars)");
 
+            const string_trimleft = new vscode.CompletionItem('trimleft ', vscode.CompletionItemKind.Method);
+            string_trimleft.documentation = new vscode.MarkdownString("Returns a value equal to string except that any leading characters present in the string given by chars are removed. If chars is not specified then white space is removed\n\nstring trim (string) (chars)");
+
+            const string_trimright = new vscode.CompletionItem('trimright ', vscode.CompletionItemKind.Method);
+            string_trimright.documentation = new vscode.MarkdownString("Returns a value equal to string except that any trailing characters present in the string given by chars are removed. If chars is not specified then white space is removed\n\nstring trim (string) (chars)");
+
+            const string_first = new vscode.CompletionItem('first ', vscode.CompletionItemKind.Method);
+
+            const string_last = new vscode.CompletionItem('last ', vscode.CompletionItemKind.Method);
+
+            const string_wordstart = new vscode.CompletionItem('wordstart ', vscode.CompletionItemKind.Method);
+
+            const string_wordend = new vscode.CompletionItem('wordend ', vscode.CompletionItemKind.Method);
+
             const string_compare = new vscode.CompletionItem('compare', vscode.CompletionItemKind.Method);
             string_compare.insertText = new vscode.SnippetString('compare ${1:string1} ${2:string1}$0');
             string_compare.documentation = new vscode.MarkdownString("compares string to another string");
@@ -1828,6 +1842,8 @@ function activate() {
             const string_length = new vscode.CompletionItem('length ', vscode.CompletionItemKind.Method);
             string_length.documentation = new vscode.MarkdownString("Returns a decimal string giving the number of characters in string.");
 
+            const string_equal = new vscode.CompletionItem('equal ', vscode.CompletionItemKind.Method);
+
             const string_repeat = new vscode.CompletionItem('repeat ', vscode.CompletionItemKind.Method);
             string_repeat.documentation = new vscode.MarkdownString("Returns string repeated count number of times.\n\nstring repeat (string) (count)");
 
@@ -1842,6 +1858,9 @@ function activate() {
 
             const string_isLower = new vscode.CompletionItem('is lower ', vscode.CompletionItemKind.Method);
             string_isLower.documentation = new vscode.MarkdownString("Any of the valid string is lower case");
+
+            const string_isSpace = new vscode.CompletionItem('is space ', vscode.CompletionItemKind.Method);
+            string_isSpace.documentation = new vscode.MarkdownString("the String is a space character");
 
             const string_isUpper = new vscode.CompletionItem('is upper ', vscode.CompletionItemKind.Method);
             string_isUpper.documentation = new vscode.MarkdownString("Any of the valid string is Upper case");
@@ -1868,7 +1887,8 @@ function activate() {
             string_match.documentation = new vscode.MarkdownString("Determine whether pattern matches string, returning return 1 if it does, 0 if it doesn't.\n\nstring match (pattern) (string)");
    
             return [string_totitle, string_repeat, string_isAlpha, string_trim, string_compare, string_index, string_reverse, string_toLower, string_toUpper, string_length, string_range, string_replace, 
-                    string_map, string_isLower, string_isUpper, string_isAscii, string_isInteger, string_isAlnum, string_isDigit, string_isDouble, string_match]
+                    string_map, string_isLower, string_isUpper, string_isAscii, string_isInteger, string_isAlnum, string_isDigit, string_isDouble, string_match,
+                    string_trimleft, string_trimright, string_first, string_last, string_wordstart, string_wordend, string_equal, string_isSpace]
 
         }
     }, ' ' // triggered whenever a ' ' is being typed
@@ -1896,7 +1916,7 @@ function activate() {
                 const file_dirname = new vscode.CompletionItem('dirname ', vscode.CompletionItemKind.Method);
                 file_dirname.documentation = new vscode.MarkdownString("Returns a name comprised of all of the path components in name excluding the last element.");
 
-                const file_isDirectory = new vscode.CompletionItem('is directory ', vscode.CompletionItemKind.Method);
+                const file_isDirectory = new vscode.CompletionItem('isdirectory ', vscode.CompletionItemKind.Method);
                 file_isDirectory.documentation = new vscode.MarkdownString("Returns 1 if file name is a directory, 0 otherwise.");
 
                 const file_join = new vscode.CompletionItem('join ', vscode.CompletionItemKind.Method);
@@ -1932,7 +1952,7 @@ function activate() {
                 const file_extension = new vscode.CompletionItem('extension ', vscode.CompletionItemKind.Method);
                 file_extension.documentation = new vscode.MarkdownString("Returns all of the characters in name after and including the last dot in the last element of name. If there is no dot in the last element of name then returns the empty string.");
 
-                const file_isFile = new vscode.CompletionItem('is file ', vscode.CompletionItemKind.Method);
+                const file_isFile = new vscode.CompletionItem('isfile ', vscode.CompletionItemKind.Method);
                 file_isFile.documentation = new vscode.MarkdownString("Returns 1 if file name is a regular file, 0 otherwise.");
 
 
