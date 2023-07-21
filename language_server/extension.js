@@ -6,33 +6,23 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode = require("vscode");
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function add_to_all_words(word, all_words) {
 //first, the given word is checked. if it is not a string, or the length is less than 2, nothing happens.
 //if special characters in the string, they will be removed
 //if the given word not contains in the all_words list, it will append there and the word will be returned
 //the return word will suggest in intellisense
 //the all_word list contains all the suggested words, so that no word will be double
-
-    if (typeof word !== "string") {
-        return null;
-    }
-
+function add_to_all_words(word, all_words) {
+    if (typeof word !== "string") {return null}
     word = word.replace(/[\[\]{}()$'".@\\\/:!?=&%+*-;,]/g, "").trim();
-
-    if (word.length <= 2 || word.startsWith("%") || word.startsWith("_") || (Number(word))) {
-        return null;
-    }
-
+    if (word.length <= 2 || word.startsWith("%") || word.startsWith("_") || (Number(word))) {return null;}
     if (!all_words.includes(word)) {
         all_words.push(word);
         return word;
     }
-    
-    return null
-
-    
+    return null 
 }
 
 //Helper function to remove strings from the given line (if it is in quotes)
@@ -49,7 +39,10 @@ function is_double(word, word_list) {
     return false
 }
 
-function activate(context) {
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function activate() {
 
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  //words, that will be suggested all the time   
@@ -1266,6 +1259,7 @@ function activate(context) {
             momDisableAddress.documentation = new vscode.MarkdownString("Suppresses all output for an address.  MOM_force ONCE or\nMOM_force ALWAYS are ignored while MOM_disable_address is active. MOM_enable_address cancels\nMOM_disable_address.\n\nMOM_disable_address (Address)");
 
             const momDisplayMessage = new vscode.CompletionItem('MOM_display_message', vscode.CompletionItemKind.Event);
+            momDisplayMessage.insertText = new vscode.SnippetString('MOM_display_message "${1:Message}" "${2:title}" ${3|I,E,W,Q|} ${4| ,"button1"|}');
             momDisplayMessage.documentation = new vscode.MarkdownString("Displays a message dialog box in NX. (type) is the\nstyle of the message box, I|E|W|Q, where I is info,\nE is error, W is warning, and Q is question.\nButton labels are optional. Returns the number of the button\n(1, 2, or 3) that the user clicks.\n\nMOM_display_message (message) (title)\n(type) [(button1)][(button2)][(button3)]");
 
             const momDoTemplate = new vscode.CompletionItem('MOM_do_template', vscode.CompletionItemKind.Event);
@@ -1275,10 +1269,11 @@ function activate(context) {
             momEnableAddress.documentation = new vscode.MarkdownString("Restores output status for an address that MOM_disable_address suppressed. \nReturns output status to the initial state.\n\nMOM_enable_address (Address)");
 
             const momForce = new vscode.CompletionItem('MOM_force', vscode.CompletionItemKind.Event);
-            momForce.insertText = new vscode.SnippetString('MOM_force once ');
+            momForce.insertText = new vscode.SnippetString('MOM_force ${1|once,always,off|} ');
             momForce.documentation = new vscode.MarkdownString("The next time that a block template that contains a\nreference to any of the input address names is evaluated,\nthe word that contains that address will be output regardless\nof its modality attribute.\n\nMOM_force (Always | Once | Off )\n(Address_1 ... Address_n)");
 
             const momForceBlock = new vscode.CompletionItem('MOM_force_block', vscode.CompletionItemKind.Event);
+            momForceBlock.insertText = new vscode.SnippetString('MOM_force_block ${1|once,always,off|} ');
             momForceBlock.documentation = new vscode.MarkdownString("Example: MOM_force_block Once linear\n\nMOM_force_block (Always | Once | Off )\n(Block_1 ... Block_n)");
 
             const momIncremental = new vscode.CompletionItem('MOM_incremental', vscode.CompletionItemKind.Event);
@@ -1351,7 +1346,7 @@ function activate(context) {
             momSkipHandlerToEvent.documentation = new vscode.MarkdownString("This command will skip the execution of the event handler\nuntil the given event is encountered. The condition is reset\nat the start-of-path and when the event is met. Motion\ntypes include Engage, Approach, Firstcut, Retract, Return, Rapid, Cut, Stepover,\nDeparture, Traversal, Sidecut, From, Gohome, and Cycle.\n\nMOM_skip_handler_to_event (event or motion-type)");
 
             const momSuppress = new vscode.CompletionItem('MOM_suppress', vscode.CompletionItemKind.Event);
-            momSuppress.insertText = new vscode.SnippetString('MOM_supress once ');
+            momSuppress.insertText = new vscode.SnippetString('MOM_suppress ${1|once,always,off|} ');
             momSuppress.documentation = new vscode.MarkdownString("The next time that a block template that contains a\nreference to any of the input address names is evaluated,\nthe word that contains the address will not be output\nregardless of its modality attribute.\n\nMOM_suppress (Always | Once | Off\n) (Address_1 ... &gt");
 
             const momUpdateKinematics = new vscode.CompletionItem('MOM_update_kinematics', vscode.CompletionItemKind.Event);
@@ -1811,6 +1806,20 @@ function activate(context) {
             const string_trim = new vscode.CompletionItem('trim ', vscode.CompletionItemKind.Method);
             string_trim.documentation = new vscode.MarkdownString("Returns a value equal to string except that any leading or trailing characters present in the string given by chars are removed. If chars is not specified then white space is removed\n\nstring trim (string) (chars)");
 
+            const string_trimleft = new vscode.CompletionItem('trimleft ', vscode.CompletionItemKind.Method);
+            string_trimleft.documentation = new vscode.MarkdownString("Returns a value equal to string except that any leading characters present in the string given by chars are removed. If chars is not specified then white space is removed\n\nstring trim (string) (chars)");
+
+            const string_trimright = new vscode.CompletionItem('trimright ', vscode.CompletionItemKind.Method);
+            string_trimright.documentation = new vscode.MarkdownString("Returns a value equal to string except that any trailing characters present in the string given by chars are removed. If chars is not specified then white space is removed\n\nstring trim (string) (chars)");
+
+            const string_first = new vscode.CompletionItem('first ', vscode.CompletionItemKind.Method);
+
+            const string_last = new vscode.CompletionItem('last ', vscode.CompletionItemKind.Method);
+
+            const string_wordstart = new vscode.CompletionItem('wordstart ', vscode.CompletionItemKind.Method);
+
+            const string_wordend = new vscode.CompletionItem('wordend ', vscode.CompletionItemKind.Method);
+
             const string_compare = new vscode.CompletionItem('compare', vscode.CompletionItemKind.Method);
             string_compare.insertText = new vscode.SnippetString('compare ${1:string1} ${2:string1}$0');
             string_compare.documentation = new vscode.MarkdownString("compares string to another string");
@@ -1835,6 +1844,8 @@ function activate(context) {
             const string_length = new vscode.CompletionItem('length ', vscode.CompletionItemKind.Method);
             string_length.documentation = new vscode.MarkdownString("Returns a decimal string giving the number of characters in string.");
 
+            const string_equal = new vscode.CompletionItem('equal ', vscode.CompletionItemKind.Method);
+
             const string_repeat = new vscode.CompletionItem('repeat ', vscode.CompletionItemKind.Method);
             string_repeat.documentation = new vscode.MarkdownString("Returns string repeated count number of times.\n\nstring repeat (string) (count)");
 
@@ -1849,6 +1860,9 @@ function activate(context) {
 
             const string_isLower = new vscode.CompletionItem('is lower ', vscode.CompletionItemKind.Method);
             string_isLower.documentation = new vscode.MarkdownString("Any of the valid string is lower case");
+
+            const string_isSpace = new vscode.CompletionItem('is space ', vscode.CompletionItemKind.Method);
+            string_isSpace.documentation = new vscode.MarkdownString("the String is a space character");
 
             const string_isUpper = new vscode.CompletionItem('is upper ', vscode.CompletionItemKind.Method);
             string_isUpper.documentation = new vscode.MarkdownString("Any of the valid string is Upper case");
@@ -1875,7 +1889,8 @@ function activate(context) {
             string_match.documentation = new vscode.MarkdownString("Determine whether pattern matches string, returning return 1 if it does, 0 if it doesn't.\n\nstring match (pattern) (string)");
    
             return [string_totitle, string_repeat, string_isAlpha, string_trim, string_compare, string_index, string_reverse, string_toLower, string_toUpper, string_length, string_range, string_replace, 
-                    string_map, string_isLower, string_isUpper, string_isAscii, string_isInteger, string_isAlnum, string_isDigit, string_isDouble, string_match]
+                    string_map, string_isLower, string_isUpper, string_isAscii, string_isInteger, string_isAlnum, string_isDigit, string_isDouble, string_match,
+                    string_trimleft, string_trimright, string_first, string_last, string_wordstart, string_wordend, string_equal, string_isSpace]
 
         }
     }, ' ' // triggered whenever a ' ' is being typed
@@ -1903,7 +1918,7 @@ function activate(context) {
                 const file_dirname = new vscode.CompletionItem('dirname ', vscode.CompletionItemKind.Method);
                 file_dirname.documentation = new vscode.MarkdownString("Returns a name comprised of all of the path components in name excluding the last element.");
 
-                const file_isDirectory = new vscode.CompletionItem('is directory ', vscode.CompletionItemKind.Method);
+                const file_isDirectory = new vscode.CompletionItem('isdirectory ', vscode.CompletionItemKind.Method);
                 file_isDirectory.documentation = new vscode.MarkdownString("Returns 1 if file name is a directory, 0 otherwise.");
 
                 const file_join = new vscode.CompletionItem('join ', vscode.CompletionItemKind.Method);
@@ -1939,7 +1954,7 @@ function activate(context) {
                 const file_extension = new vscode.CompletionItem('extension ', vscode.CompletionItemKind.Method);
                 file_extension.documentation = new vscode.MarkdownString("Returns all of the characters in name after and including the last dot in the last element of name. If there is no dot in the last element of name then returns the empty string.");
 
-                const file_isFile = new vscode.CompletionItem('is file ', vscode.CompletionItemKind.Method);
+                const file_isFile = new vscode.CompletionItem('isfile ', vscode.CompletionItemKind.Method);
                 file_isFile.documentation = new vscode.MarkdownString("Returns 1 if file name is a regular file, 0 otherwise.");
 
 
@@ -2213,8 +2228,8 @@ function activate(context) {
         //lists for the names. they are needed for avoid double intellisense items. they will be filled in the matching provider
         variable_names: [],
         proc_names: [],
-        global_names: [],
-        buffer_names: []
+        buffer_names: [],
+        global_names: []
 
     };
 
@@ -2222,8 +2237,7 @@ function activate(context) {
         provideCompletionItems(document, position) {
 
             const variables = [];
-            const variable_list = [];
-
+            
 
             for (let i = 0; i < document.lineCount; i++) {
                 if (document.lineAt(i).text.indexOf("set ") >= 0) {
@@ -2239,7 +2253,7 @@ function activate(context) {
                             if (variable.indexOf("::") >= 0 || variable.indexOf("$$") >= 0) {continue} //namespace variablen nicht lesen
                             splittet_line.splice(splittet_line.indexOf("set"), 1);
                             if (!is_double(variable, variables)) {
-                                variables.push(variable)
+                                variables.push(variable);
                                 completionLists.variable_names.push(variable);
                             }
                         };                        
@@ -2247,10 +2261,10 @@ function activate(context) {
                 };    
             };
 
+            const variable_list = [];
             for (let i = 0; i < variables.length; i++) { 
                 variable_list.push(new vscode.CompletionItem(variables[i], vscode.CompletionItemKind.Variable))
             }
-
 
             return variable_list
         }
@@ -2260,7 +2274,6 @@ function activate(context) {
         provideCompletionItems(document, position) {
 
             const procedures = [];
-            const proc_list = [];
             
 
             for (let i = 0; i < document.lineCount; i++) {
@@ -2276,6 +2289,7 @@ function activate(context) {
                 };           
             }; 
 
+            const proc_list = [];
             for (let i = 0; i < procedures.length; i++) { 
                 proc_list.push(new vscode.CompletionItem(procedures[i], vscode.CompletionItemKind.Method))
             }
@@ -2288,9 +2302,7 @@ function activate(context) {
         provideCompletionItems(document, position) {
 
             const globals = [];
-            const global_list = [];
-
-
+            
             for (let i = 0; i < document.lineCount; i++) {
                 if (document.lineAt(i).text.indexOf("global ") >= 0) {
                     let line = document.lineAt(i).text;
@@ -2299,8 +2311,8 @@ function activate(context) {
                         const global = splittet_line[i].trim();
                         if (global === "global" || global.startsWith("$")) {
                             continue
-                        }else if (!is_double(global, globals)) {
-                            globals.push(global)
+                        }else if (!is_double(global, globals) && !is_double(global, completionLists.variable_names)) {
+                            globals.push(global);
                             completionLists.global_names.push(global);
                         }
                         
@@ -2309,6 +2321,7 @@ function activate(context) {
                 };           
             }; 
 
+            const global_list = [];
             for (let i = 0; i < globals.length; i++) { 
                 global_list.push(new vscode.CompletionItem(globals[i], vscode.CompletionItemKind.Variable))
             }
@@ -2321,8 +2334,7 @@ function activate(context) {
         provideCompletionItems(document, position) {
 
             const buffers = [];
-            const buffer_list = [];
-
+            
             for (let i = 0; i < document.lineCount; i++) {
                 if (document.lineAt(i).text.indexOf("LIB_GE_command_buffer ") >= 0) {
                     let line = document.lineAt(i).text;
@@ -2344,6 +2356,7 @@ function activate(context) {
                 };           
             }; 
 
+            const buffer_list = [];
             for (let i = 0; i < buffers.length; i++) { 
                 buffer_list.push(new vscode.CompletionItem(buffers[i], vscode.CompletionItemKind.Interface))
             }
@@ -2360,8 +2373,6 @@ function activate(context) {
     const words_provider = vscode.languages.registerCompletionItemProvider('NX', {
         provideCompletionItems(document, position) {
             
-
-            const word_list = [];
             const words = [];
 
             //words, that be all the time in the list, because they are suggestet any time
@@ -2380,7 +2391,7 @@ function activate(context) {
             "format", "scan", "seconds", "require", "provide", "split", "rename", "dirname", "is directory", "join", "exists", "type", "delete", "size", "readable", "writeable", "copy", "mkdir", "tail", "is file", "extension", "trim", "compare", "index", "reverse", "tolower", "toupper", "totitle", "length", "repeat", "match", "range", "replace", "map", "is lower", "is upper", "is ascii", "is digit", "is alpha", "is integer", "is alnum", "is double", "script", "body", "commands", "args", "default", "errorstack", "globals", "procs", "vars", "version", "-all", "-format", "-exact", "-force", "-observer", "-ersioncxanguageode"];
 
             //combined all word lists in one big list
-            const all_words = all_words_fix.concat(completionLists.variable_names, completionLists.proc_names, completionLists.global_names, completionLists.buffer_names) 
+            const all_words = all_words_fix.concat(completionLists.variable_names, completionLists.proc_names, completionLists.buffer_names, completionLists.global_names) 
                 
             //get current word, for not suggesting it
             //let current_word = document.lineAt(position).text.substr(0, position.character).split(" ");
@@ -2400,6 +2411,7 @@ function activate(context) {
                     };
                 };
 
+                const word_list = [];
                 for (let h = 0; h < words.length; h++) { 
                     word_list.push(new vscode.CompletionItem(words[h], vscode.CompletionItemKind.Text))
                 };
