@@ -1259,6 +1259,7 @@ function activate() {
             momDisableAddress.documentation = new vscode.MarkdownString("Suppresses all output for an address.  MOM_force ONCE or\nMOM_force ALWAYS are ignored while MOM_disable_address is active. MOM_enable_address cancels\nMOM_disable_address.\n\nMOM_disable_address (Address)");
 
             const momDisplayMessage = new vscode.CompletionItem('MOM_display_message', vscode.CompletionItemKind.Event);
+            momDisplayMessage.insertText = new vscode.SnippetString('MOM_display_message "${1:Message}" "${2:title}" ${3|I,E,W,Q|} ${4| ,"button1"|}');
             momDisplayMessage.documentation = new vscode.MarkdownString("Displays a message dialog box in NX. (type) is the\nstyle of the message box, I|E|W|Q, where I is info,\nE is error, W is warning, and Q is question.\nButton labels are optional. Returns the number of the button\n(1, 2, or 3) that the user clicks.\n\nMOM_display_message (message) (title)\n(type) [(button1)][(button2)][(button3)]");
 
             const momDoTemplate = new vscode.CompletionItem('MOM_do_template', vscode.CompletionItemKind.Event);
@@ -1268,10 +1269,11 @@ function activate() {
             momEnableAddress.documentation = new vscode.MarkdownString("Restores output status for an address that MOM_disable_address suppressed. \nReturns output status to the initial state.\n\nMOM_enable_address (Address)");
 
             const momForce = new vscode.CompletionItem('MOM_force', vscode.CompletionItemKind.Event);
-            momForce.insertText = new vscode.SnippetString('MOM_force once ');
+            momForce.insertText = new vscode.SnippetString('MOM_force ${1|once,always,off|} ');
             momForce.documentation = new vscode.MarkdownString("The next time that a block template that contains a\nreference to any of the input address names is evaluated,\nthe word that contains that address will be output regardless\nof its modality attribute.\n\nMOM_force (Always | Once | Off )\n(Address_1 ... Address_n)");
 
             const momForceBlock = new vscode.CompletionItem('MOM_force_block', vscode.CompletionItemKind.Event);
+            momForceBlock.insertText = new vscode.SnippetString('MOM_force_block ${1|once,always,off|} ');
             momForceBlock.documentation = new vscode.MarkdownString("Example: MOM_force_block Once linear\n\nMOM_force_block (Always | Once | Off )\n(Block_1 ... Block_n)");
 
             const momIncremental = new vscode.CompletionItem('MOM_incremental', vscode.CompletionItemKind.Event);
@@ -1344,7 +1346,7 @@ function activate() {
             momSkipHandlerToEvent.documentation = new vscode.MarkdownString("This command will skip the execution of the event handler\nuntil the given event is encountered. The condition is reset\nat the start-of-path and when the event is met. Motion\ntypes include Engage, Approach, Firstcut, Retract, Return, Rapid, Cut, Stepover,\nDeparture, Traversal, Sidecut, From, Gohome, and Cycle.\n\nMOM_skip_handler_to_event (event or motion-type)");
 
             const momSuppress = new vscode.CompletionItem('MOM_suppress', vscode.CompletionItemKind.Event);
-            momSuppress.insertText = new vscode.SnippetString('MOM_supress once ');
+            momSuppress.insertText = new vscode.SnippetString('MOM_suppress ${1|once,always,off|} ');
             momSuppress.documentation = new vscode.MarkdownString("The next time that a block template that contains a\nreference to any of the input address names is evaluated,\nthe word that contains the address will not be output\nregardless of its modality attribute.\n\nMOM_suppress (Always | Once | Off\n) (Address_1 ... &gt");
 
             const momUpdateKinematics = new vscode.CompletionItem('MOM_update_kinematics', vscode.CompletionItemKind.Event);
