@@ -16,6 +16,7 @@ const vscode = require("vscode");
 //the all_word list contains all the suggested words, so that no word will be double
 function add_to_all_words(word, all_words) {
     if (typeof word !== "string") {return null}
+    word = word.split("(")[0]
     word = word.replace(/[\[\]{}()$'".@\\\/:!?=&%+*-;,]/g, "").trim();
     if (word.length <= 2 || word.startsWith("%") || word.startsWith("_") || (Number(word))) {return null;}
     if (!all_words.includes(word)) {
@@ -2249,6 +2250,7 @@ function activate() {
                         if (splittet_line[j] === "set") {
                             let variable_index = splittet_line.indexOf("set") + 1;
                             let variable = splittet_line[variable_index];
+                            variable = variable.split("(")[0]
                             variable = variable.replace(/[\[\]$]/g, "").trim();
                             if (variable.indexOf("::") >= 0 || variable.indexOf("$$") >= 0) {continue} //namespace variablen nicht lesen
                             splittet_line.splice(splittet_line.indexOf("set"), 1);
@@ -2312,6 +2314,7 @@ function activate() {
                         if (global === "global" || global.startsWith("$")) {
                             continue
                         }else if (!is_double(global, globals) && !is_double(global, completionLists.variable_names)) {
+                            global = global.split("(")[0]
                             globals.push(global);
                             completionLists.global_names.push(global);
                         }
