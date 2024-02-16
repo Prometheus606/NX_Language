@@ -2,7 +2,7 @@
 	"name": "nx",
 	"displayName": "NX Language",
 	"description": "TCL Language Support with Siemens NX Commands",
-	"version": "0.3.3",
+	"version": "1.0.0",
 	"publisher": "Niklas Beitler",
 	"license": "included LICENSE file",
 	"icon": "images/nx-1.png",

@@ -2192,6 +2192,39 @@ function activate() {
     }, ' ' // triggered whenever a ' ' is being typed
     );
 
+    const array_provider = vscode.languages.registerCompletionItemProvider('NX', {
+        provideCompletionItems(document, position) {
+            // get all text until the `position` and check if it reads `array `
+            // and if so then complete with the array methods.
+            let linePrefix = document.lineAt(position).text.substr(0, position.character);
+            if (!linePrefix.endsWith('array ')) {
+                return undefined;
+            }
+
+                const array_exists = new vscode.CompletionItem('exists ', vscode.CompletionItemKind.Method);
+                array_exists.documentation = new vscode.MarkdownString("array exists indicates whether a variable exists in an array\nReturns 1 if arrayName is an array variable, or 0 if there is no variable by that name or if the variable is not an array variable.");
+
+                const array_get = new vscode.CompletionItem('get ', vscode.CompletionItemKind.Method);
+                array_get.documentation = new vscode.MarkdownString("array get retrieves values in an array.\n\narray get (arrayName) (pattern)");
+
+                const array_names = new vscode.CompletionItem('names ', vscode.CompletionItemKind.Method);
+                array_names.documentation = new vscode.MarkdownString("array names retrieves the names of keys in an array.\n\narray names (arrayName) (mode) (pattern)");
+
+                const array_set = new vscode.CompletionItem('set ', vscode.CompletionItemKind.Method);
+                array_set.documentation = new vscode.MarkdownString("array set sets values in an array.\n\narray set (arrayName) (dictionary)");
+
+                const array_size = new vscode.CompletionItem('size ', vscode.CompletionItemKind.Method);
+                array_size.documentation = new vscode.MarkdownString("array size (arrayName)");
+
+                const array_unset = new vscode.CompletionItem('unset ', vscode.CompletionItemKind.Method);
+                array_unset.documentation = new vscode.MarkdownString("array unset unsets variables in an array.");
+
+
+            return [array_exists, array_unset, array_size, array_set, array_names, array_get]
+        }
+    }, ' ' // triggered whenever a ' ' is being typed
+    );
+
 
 
 
@@ -2429,7 +2462,7 @@ function activate() {
 
     context.subscriptions.push(eq_provider, vec_provider, mtx_provider, mom_variable_provider, mom_events_provider, lib_provider, 
                             string_provider, clock_format_provider, file_provider, package_provider, clock_provider, format_provider, 
-                            info_provider, variable_provider, procedur_provider, global_provider, buffer_provider, words_provider);
+                            info_provider, array_provider, variable_provider, procedur_provider, global_provider, buffer_provider, words_provider);
 }
 
 
