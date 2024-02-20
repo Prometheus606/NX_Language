@@ -2,8 +2,8 @@
 	"name": "nx",
 	"displayName": "NX Language",
 	"description": "TCL Language Support with Siemens NX Commands",
-	"version": "0.3.2",
-	"publisher": "Niklas Beitler",
+	"version": "1.0.0",
+	"publisher": "NiklasBeitler",
 	"license": "included LICENSE file",
 	"icon": "images/nx-1.png",
 	"engines": {
@@ -13,52 +13,70 @@
 		"type": "git",
 		"url": ""
 	},
+	"author": {
+		"name": "Niklas Beitler"
+	},
+	"keywords": [
+        "tcl",
+        "tk",
+		"siemens",
+		"nx",
+		"post",
+		"processor"
+    ],
+	"capabilities": {
+		"untrustedWorkspaces": {
+			"supported": true
+		}
+	},
 	"categories": [
-		"Programming Languages"
+		"Formatters",
+        "Other",
+        "Programming Languages",
+        "Snippets"
 	],
 	"galleryBanner": {
 		"color": "#242424",
 		"theme": "dark"
 	},
 	"contributes": {
-		"languages": [
-			{
-				"id": "NX",
-				"aliases": [
-					"Tcl",
-					"nx",
-					"NX",
-					"Nx",
-					"Siemens",
-					"tcl"
-				],
-				"extensions": [
-					".tcl"
-				],
-				"configuration": "./nx.configuration.json"
-			}
-			
-		],
-		"grammars": [
-			{
-				"language": "NX",
-				"scopeName": "source.tcl",
-				"path": "./syntaxes/nx.tmLanguage"
-			}
-		],
-		"snippets": [
-			{
-				"language": "NX",
-				"path": "./snippets/tcl_snippets.json"
-			},
-			{
-				"language": "NX",
-				"path": "./snippets/nx_snippets.json"
-			}
-		]
-
-
-	},
+        "languages": [
+            {
+                "id": "NX",
+                "aliases": [
+                    "Tcl",
+                    "nx",
+                    "NX",
+                    "Nx",
+                    "Siemens",
+                    "tcl",
+					"post",
+					"processor"
+                ],
+                "extensions": [
+                    ".tcl"
+                ],
+                "configuration": "./nx.configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "NX",
+                "scopeName": "source.tcl",
+                "path": "./syntaxes/nx.tmLanguage"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "NX",
+                "path": "./snippets/tcl_snippets.json"
+            },
+            {
+                "language": "NX",
+                "path": "./snippets/nx_snippets.json"
+            }
+        ]
+    },
 
 	"activationEvents": [
 		"onLanguage:tcl"
@@ -80,7 +98,7 @@
 	"__metadata": {
 		"id": "",
 		"publisherId": "",
-		"publisherDisplayName": "Niklas Beitler",
+		"publisherDisplayName": "NiklasBeitler",
 		"targetPlatform": "undefined",
 		"updated": false,
 		"isPreReleaseVersion": false,
