@@ -1,0 +1,18 @@
+  {
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "keyword.MOM.commands.tcl",
+                "settings": {
+                    "foreground": "#e26fdb"
+                }
+            },
+            {
+                "scope": "keyword.buffer.tcl",
+                "settings": {
+                    "foreground": "#e25c14"
+                }
+            }
+        ]
+    }
+  }
