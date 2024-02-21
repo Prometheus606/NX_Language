@@ -1,42 +1,32 @@
-# TCL and Siemens NX Language Support for VS Studio Code
+# TCL and Siemens NX Language Support for Visual Studio Code
 
-This extension adds rich language support for the TCL language and some Siemens NX Commands.
-Used for Siemens NX Post Konfigurator.
+This extension provides enhanced language support for the TCL language and some Siemens NX commands, primarily used for the Siemens NX Post Configurator.
 
-Including so far:
+## Features
 
-- Syntaxhighlighting
-- Tcl Snippets
-- Tcl autocomplete
-- NX MOM Variables autocomplete
-- NX MOM events autocomplete
-- NX buffer commands autocomplete
-- NX Snippets
-- procedures, globals, buffer and variables regognization and autocomplete
-- all words regognization and autocomplete
+- **Syntax Highlighting**: Enjoy syntax highlighting for TCL and Siemens NX commands to improve code readability.
+- **Autocompletion**: Benefit from autocomplete suggestions for TCL snippets, NX MOM variables, events, buffer commands, and more.
+- **Snippets**: Quickly insert commonly used code snippets for TCL and Siemens NX development.
+- **Variable Recognition**: Efficiently navigate your code with automatic recognition and autocomplete for procedures, global variables, buffers, and more.
+- **Visual Enhancements**: Enhance your coding experience with visual aids such as syntax images and example GIFs.
 
-For Highlighting the NX commands, you have to change the "settings.json" file.   
-You find it in the search bar above. Type in: >Preferences: Open User Settings (JSON)   
-Copy the following code inside this file:   
+## Screenshots
 
+### Syntax highlighting
+![Syntax Highlighting](./images/sample_code.png)
 
-"editor.tokenColorCustomizations": {
-        "textMateRules": [
-            {
-                "scope": "keyword.MOM.commands.tcl",
-                "settings": {
-                    "foreground": "#e26fdb"
-                }
-            },
-            {
-                "scope": "keyword.buffer.tcl",
-                "settings": {
-                    "foreground": "#e25c14"
-                }
-            }
-        ]
-    }   
+### Autocomplete, snippets
+![Demo](./images/code_example.gif)
 
+## Usage
 
-Author: Niklas Beitler   
-Date: 20.02.2024
+To install this extension, search for "TCL and Siemens NX Language Support" in the Visual Studio Code Extensions Marketplace and click "Install".
+
+## Author
+
+Niklas Beitler
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+

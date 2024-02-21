@@ -3,7 +3,7 @@
 	"displayName": "NX Language",
 	"description": "TCL Language Support with Siemens NX Commands",
 	"version": "1.0.0",
-	"publisher": "NiklasBeitler",
+	"publisher": "niklas-beitler",
 	"license": "included LICENSE file",
 	"icon": "images/nx-1.png",
 	"engines": {
@@ -11,19 +11,19 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": ""
+		"url": "https://github.com/Prometheus606/NX_Language"
 	},
 	"author": {
 		"name": "Niklas Beitler"
 	},
 	"keywords": [
-        "tcl",
-        "tk",
+		"tcl",
+		"tk",
 		"siemens",
 		"nx",
 		"post",
 		"processor"
-    ],
+	],
 	"capabilities": {
 		"untrustedWorkspaces": {
 			"supported": true
@@ -31,9 +31,9 @@
 	},
 	"categories": [
 		"Formatters",
-        "Other",
-        "Programming Languages",
-        "Snippets"
+		"Other",
+		"Programming Languages",
+		"Snippets"
 	],
 	"galleryBanner": {
 		"color": "#242424",
@@ -75,7 +75,22 @@
                 "language": "NX",
                 "path": "./snippets/nx_snippets.json"
             }
-        ]
+        ],
+		"configuration": {
+			"title": "NX_Language",
+			"properties": {
+				"NX_Language.MOM_Color": {
+					"type": "string",
+					"default": "#e26fdb",
+					"description": "Customizes the MOM Command colors in the editor."
+				},
+				"NX_Language.LIB_Color": {
+					"type": "string",
+					"default": "#e25c14",
+					"description": "Customizes the LIB Command colors in the editor."
+				}
+			}
+		}
     },
 
 	"activationEvents": [
@@ -91,14 +106,12 @@
 	"devDependencies": {
 		"@types/node": "^10.12.18",
 		"tslint": "^5.16.0",
-		"typescript": "^3.5.1",
-		"@types/vscode": "^1.32.0"
+		"typescript": "^3.5.1"
 	},
-
 	"__metadata": {
 		"id": "",
 		"publisherId": "",
-		"publisherDisplayName": "NiklasBeitler",
+		"publisherDisplayName": "Niklas Beitler",
 		"targetPlatform": "undefined",
 		"updated": false,
 		"isPreReleaseVersion": false,

@@ -42,6 +42,40 @@ function is_double(word, word_list) {
     return false
 }
 
+// Function to read and change settings
+function manipulateSettings() {
+        
+    // get extension settings
+    const extensionSettings = vscode.workspace.getConfiguration("NX_Language")
+    const MOM_Color = extensionSettings.get("MOM_Color");
+    const LIB_Color = extensionSettings.get("LIB_Color");
+
+    const settingValue = {
+        "textMateRules": [
+            {
+                "scope": "keyword.MOM.commands.tcl",
+                "settings": {
+                    "foreground": `${MOM_Color}`
+                }
+            },
+            {
+                "scope": "keyword.buffer.tcl",
+                "settings": {
+                    "foreground": `${LIB_Color}`
+                }
+            }
+        ]
+    }   
+
+    const config = vscode.workspace.getConfiguration("editor");
+    config.update("tokenColorCustomizations", settingValue, vscode.ConfigurationTarget.Global)
+        .then(() => {
+            // vscode.window.showInformationMessage('Settings updated successfully');
+        }, (error) => {
+            vscode.window.showErrorMessage(`Error updating settings: ${error}`);
+        });
+}
+
 // loads completition items from json file
 function loadCompletitionItems() {
     // Pfad zur JSON-Datei
@@ -86,6 +120,8 @@ let providerList = []
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function activate() {
+
+    manipulateSettings()
 
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  //words, that will be suggested all the time   
