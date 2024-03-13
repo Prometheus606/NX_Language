@@ -182,7 +182,7 @@
 			"LIB_GE_command_buffer ${var}",
       		"LIB_GE_command_buffer {",
 			  "\n\t$0\n",
-      		"} @_${var}",
+      		"} @${var}",
       		"LIB_GE_command_buffer_output"
             
 		],
@@ -192,12 +192,43 @@
 		"prefix": "newShortBuffer",
 		"body": [
 			"LIB_GE_command_buffer ${var}",
-      		"LIB_GE_command_buffer {if {[llength [info commands ${var}]]} {${var}}} @_${var}",
+      		"LIB_GE_command_buffer {if {[llength [info commands ${var}]]} {${var}}} @${var}",
       		"LIB_GE_command_buffer_output$0"
             
 		],
 		"description": "Creates the template code for a new buffer"
-	}
+	},
+	"get_pretreatment": {
+		"prefix": "get_pretreatment",
+		"description": "",
+		"body": [
+		  "if {[LIB_SPF_pt_exists ${cxVarName}]} {",
+		  "\tset ${cxVarName} [LIB_SPF_get_pretreatment ${cxVarName} 0]",
+		  "}"
+		]
+	  },
+	  "set_pretreatment": {
+		"prefix": "set_pretreatment\r",
+		"description": "",
+		"body": [
+		  "\r",
+		  "#------------------------------------------------------------\r",
+		  "proc LIB_SPF_pt_additional_variables_CxUdeName {} {\r",
+		  "#------------------------------------------------------------\r",
+		  "\tLIB_SPF_pretreatment_add_var MOM_initial_move mom_cxUdeVar 0\r",
+		  "\tLIB_SPF_pretreatment_add_var MOM_first_move mom_cxUdeVar 0\r",
+		  "}"
+		]
+	  },
+	  "get_header_pretreatment": {
+		"prefix": "get_header_pretreatment",
+		"description": "",
+		"body": [
+		  "if {[LIB_PT_get_header_var ${cxVarName} exists]} {",
+		  "\tset ${cxVarName} [LIB_PT_get_header_var ${cxVarName}]",
+		  "}"
+		]
+	  }
 	
 }
 

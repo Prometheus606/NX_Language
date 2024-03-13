@@ -163,7 +163,30 @@
             
 		],
 		"description": "Creates the initial Line"
-	}
+	},
+	"match": {
+		"prefix": "match",
+		"description": "",
+		"body": [
+		  "[string match \"*${Value}*\" ${cxValue}]"
+		]
+	  },
+	  "info exists": {
+		"prefix": "info exists",
+		"description": "",
+		"body": [
+		  "if {[info exists ${var}]} {",
+		  "\t$0",
+		  "}"
+		]
+	  },
+	  "info exists return": {
+		"prefix": "info exists return",
+		"description": "",
+		"body": [
+		  "if {[info exists ${var}]} {return}"
+		]
+	  }
 	
 }
 
