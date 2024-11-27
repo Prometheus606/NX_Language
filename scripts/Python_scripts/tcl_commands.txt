@@ -1,0 +1,300 @@
+const after = new vscode.CompletionItem('after', vscode.CompletionItemKind.Method);
+after.documentation = new vscode.MarkdownString("");
+
+const append = new vscode.CompletionItem('append', vscode.CompletionItemKind.Method);
+append.documentation = new vscode.MarkdownString("appends values to the value stored in a variable.\n\nappend (variable)\n(value)");
+
+const array = new vscode.CompletionItem('array', vscode.CompletionItemKind.Method);
+array.documentation = new vscode.MarkdownString("Manipulate array variables");
+
+const auto_execok = new vscode.CompletionItem('auto_execok', vscode.CompletionItemKind.Method);
+auto_execok.documentation = new vscode.MarkdownString("");
+
+const auto_import = new vscode.CompletionItem('auto_import', vscode.CompletionItemKind.Method);
+auto_import.documentation = new vscode.MarkdownString("");
+
+const auto_load = new vscode.CompletionItem('auto_load', vscode.CompletionItemKind.Method);
+auto_load.documentation = new vscode.MarkdownString("");
+
+const auto_mkindex = new vscode.CompletionItem('auto_mkindex', vscode.CompletionItemKind.Method);
+auto_mkindex.documentation = new vscode.MarkdownString("");
+
+const auto_mkindex_old = new vscode.CompletionItem('auto_mkindex_old', vscode.CompletionItemKind.Method);
+auto_mkindex_old.documentation = new vscode.MarkdownString("");
+
+const auto_qualify = new vscode.CompletionItem('auto_qualify', vscode.CompletionItemKind.Method);
+auto_qualify.documentation = new vscode.MarkdownString("");
+
+const auto_reset = new vscode.CompletionItem('auto_reset', vscode.CompletionItemKind.Method);
+auto_reset.documentation = new vscode.MarkdownString("");
+
+const bgerror = new vscode.CompletionItem('bgerror', vscode.CompletionItemKind.Method);
+bgerror.documentation = new vscode.MarkdownString("");
+
+const binary = new vscode.CompletionItem('binary', vscode.CompletionItemKind.Method);
+binary.documentation = new vscode.MarkdownString("");
+
+const cd = new vscode.CompletionItem('cd', vscode.CompletionItemKind.Method);
+cd.documentation = new vscode.MarkdownString("Changes the current directory to dirName if dirName is given,\nor to the $HOME directory if dirName is not given.\nIf dirName is a tilde ~, cd changes the working\ndirectory to the users home directory. If dirName starts with\na tilde, then the rest of the characters are treated\nas a login id, and cd changes the working directory\nto that user's $HOME.\n\ncd (dirname)");
+
+const clock = new vscode.CompletionItem('clock', vscode.CompletionItemKind.Method);
+clock.documentation = new vscode.MarkdownString("clock - Obtain and manipulate dates and times.");
+
+const close = new vscode.CompletionItem('close', vscode.CompletionItemKind.Method);
+close.documentation = new vscode.MarkdownString("Closes a file opened at runtime.\n\nclose ($filename)");
+
+const concat = new vscode.CompletionItem('concat', vscode.CompletionItemKind.Method);
+concat.documentation = new vscode.MarkdownString("");
+
+const dde = new vscode.CompletionItem('dde', vscode.CompletionItemKind.Method);
+dde.documentation = new vscode.MarkdownString("");
+
+const encoding = new vscode.CompletionItem('encoding', vscode.CompletionItemKind.Method);
+encoding.documentation = new vscode.MarkdownString("");
+
+const eof = new vscode.CompletionItem('eof', vscode.CompletionItemKind.Method);
+eof.documentation = new vscode.MarkdownString("");
+
+const error = new vscode.CompletionItem('error', vscode.CompletionItemKind.Method);
+error.documentation = new vscode.MarkdownString("");
+
+const eval = new vscode.CompletionItem('eval', vscode.CompletionItemKind.Method);
+eval.documentation = new vscode.MarkdownString("Eval takes one or more arguments, which together comprise a\nTcl script containing one or more commands.\n\neval (arg) (arg)");
+
+const exec = new vscode.CompletionItem('exec', vscode.CompletionItemKind.Method);
+exec.documentation = new vscode.MarkdownString("");
+
+const expr = new vscode.CompletionItem('expr', vscode.CompletionItemKind.Method);
+expr.documentation = new vscode.MarkdownString("The expr command concatenates args, separated by a space, into\nan expression, and evaluates that expression, returning its value\n\nexpr (arg)\n(arg)");
+
+const fblocked = new vscode.CompletionItem('fblocked', vscode.CompletionItemKind.Method);
+fblocked.documentation = new vscode.MarkdownString("");
+
+const fconfigure = new vscode.CompletionItem('fconfigure', vscode.CompletionItemKind.Method);
+fconfigure.documentation = new vscode.MarkdownString("");
+
+const fcopy = new vscode.CompletionItem('fcopy', vscode.CompletionItemKind.Method);
+fcopy.documentation = new vscode.MarkdownString("");
+
+const fileevent = new vscode.CompletionItem('fileevent', vscode.CompletionItemKind.Method);
+fileevent.documentation = new vscode.MarkdownString("");
+
+const filename = new vscode.CompletionItem('filename', vscode.CompletionItemKind.Method);
+filename.documentation = new vscode.MarkdownString("Closes a file opened at runtime.\n\nclose ($filename)");
+
+const flush = new vscode.CompletionItem('flush', vscode.CompletionItemKind.Method);
+flush.documentation = new vscode.MarkdownString("");
+
+const format = new vscode.CompletionItem('format', vscode.CompletionItemKind.Method);
+format.documentation = new vscode.MarkdownString("Format a string in the style of sprintf\n\nformat (formatString) (arg)\n(arg) ...");
+
+const gets = new vscode.CompletionItem('gets', vscode.CompletionItemKind.Method);
+gets.documentation = new vscode.MarkdownString("Read a line from a channel (a file, commandline input).\n\ngets\n(variable) Line");
+
+const glob = new vscode.CompletionItem('glob', vscode.CompletionItemKind.Method);
+glob.documentation = new vscode.MarkdownString("");
+
+const global = new vscode.CompletionItem('global', vscode.CompletionItemKind.Method);
+global.documentation = new vscode.MarkdownString("Access global variables.\n\nglobal (variable)");
+
+const history = new vscode.CompletionItem('history', vscode.CompletionItemKind.Method);
+history.documentation = new vscode.MarkdownString("");
+
+const http = new vscode.CompletionItem('http', vscode.CompletionItemKind.Method);
+http.documentation = new vscode.MarkdownString("");
+
+const incr = new vscode.CompletionItem('incr', vscode.CompletionItemKind.Method);
+incr.documentation = new vscode.MarkdownString("Increment the value of a variable.\n\nincr (variable) (value)");
+
+const info = new vscode.CompletionItem('info', vscode.CompletionItemKind.Method);
+info.documentation = new vscode.MarkdownString("Return information about the state of the Tcl interpreter.\n\ninfo (option)\n(arg) (arg)");
+
+const interp = new vscode.CompletionItem('interp', vscode.CompletionItemKind.Method);
+interp.documentation = new vscode.MarkdownString("Return information about the state of the Tcl interpreter.\n\ninfo (option)\n(arg) (arg)");
+
+const lappend = new vscode.CompletionItem('lappend', vscode.CompletionItemKind.Method);
+lappend.documentation = new vscode.MarkdownString("Append list elements onto a variable.\n\nlappend (variable) (value) (value)");
+
+const library = new vscode.CompletionItem('library', vscode.CompletionItemKind.Method);
+library.documentation = new vscode.MarkdownString("");
+
+const lindex = new vscode.CompletionItem('lindex', vscode.CompletionItemKind.Method);
+lindex.documentation = new vscode.MarkdownString("Retrieve an element from a list.\n\nlindex (list) (index)");
+
+const linsert = new vscode.CompletionItem('linsert', vscode.CompletionItemKind.Method);
+linsert.documentation = new vscode.MarkdownString("appends values to the value stored in a variable.\n\nappend (variable)\n(value)");
+
+const list = new vscode.CompletionItem('list', vscode.CompletionItemKind.Method);
+list.documentation = new vscode.MarkdownString("Join converts a Tcl list into a string. It glues\ntogether the elements of a list using a supplied string\nas element separator. Default is a space.\n\njoin (string1) (string2)");
+
+const llength = new vscode.CompletionItem('llength', vscode.CompletionItemKind.Method);
+llength.documentation = new vscode.MarkdownString("Count the number of elements in a list.\n\nllength (list)");
+
+const load = new vscode.CompletionItem('load', vscode.CompletionItemKind.Method);
+load.documentation = new vscode.MarkdownString("");
+
+const lrange = new vscode.CompletionItem('lrange', vscode.CompletionItemKind.Method);
+lrange.documentation = new vscode.MarkdownString("Return one or more adjacent elements from a list.\n\nlrange (list)\n(first) (last)");
+
+const lreplace = new vscode.CompletionItem('lreplace', vscode.CompletionItemKind.Method);
+lreplace.documentation = new vscode.MarkdownString("Replace elements in a list with new elements.\n\nlreplace (list) (first)\n(last) (element) (element) ...");
+
+const lsearch = new vscode.CompletionItem('lsearch', vscode.CompletionItemKind.Method);
+lsearch.documentation = new vscode.MarkdownString("See if a list contains a particular element.\n\nlsearch (variable) (value)");
+
+const lset = new vscode.CompletionItem('lset', vscode.CompletionItemKind.Method);
+lset.documentation = new vscode.MarkdownString("Change an element in a list.\n\nlset (variable) (index) (new value)");
+
+const lsort = new vscode.CompletionItem('lsort', vscode.CompletionItemKind.Method);
+lsort.documentation = new vscode.MarkdownString("Sort the elements of a list.\n\nappend (options) (list)");
+
+const memory = new vscode.CompletionItem('memory', vscode.CompletionItemKind.Method);
+memory.documentation = new vscode.MarkdownString("");
+
+const msgcat = new vscode.CompletionItem('msgcat', vscode.CompletionItemKind.Method);
+msgcat.documentation = new vscode.MarkdownString("");
+
+const namespace = new vscode.CompletionItem('namespace', vscode.CompletionItemKind.Method);
+namespace.documentation = new vscode.MarkdownString("create and manipulate contexts for commands and variables.");
+
+const open = new vscode.CompletionItem('open', vscode.CompletionItemKind.Method);
+open.documentation = new vscode.MarkdownString("Closes a file opened at runtime.\n\nclose ($filename)");
+
+const package = new vscode.CompletionItem('package', vscode.CompletionItemKind.Method);
+package.documentation = new vscode.MarkdownString("Facilities for package loading and version control.\n\nappend (variable) (value)");
+
+const parray = new vscode.CompletionItem('parray', vscode.CompletionItemKind.Method);
+parray.documentation = new vscode.MarkdownString("");
+
+const pid = new vscode.CompletionItem('pid', vscode.CompletionItemKind.Method);
+pid.documentation = new vscode.MarkdownString("");
+
+const pkg::create = new vscode.CompletionItem('pkg::create', vscode.CompletionItemKind.Method);
+pkg::create.documentation = new vscode.MarkdownString("");
+
+const pkg_mkIndex = new vscode.CompletionItem('pkg_mkIndex', vscode.CompletionItemKind.Method);
+pkg_mkIndex.documentation = new vscode.MarkdownString("");
+
+const puts = new vscode.CompletionItem('puts', vscode.CompletionItemKind.Method);
+puts.documentation = new vscode.MarkdownString("Write to a channel.\n\nputs (text)");
+
+const pwd = new vscode.CompletionItem('pwd', vscode.CompletionItemKind.Method);
+pwd.documentation = new vscode.MarkdownString("");
+
+const regexp = new vscode.CompletionItem('regexp', vscode.CompletionItemKind.Method);
+regexp.documentation = new vscode.MarkdownString("");
+
+const regsub = new vscode.CompletionItem('regsub', vscode.CompletionItemKind.Method);
+regsub.documentation = new vscode.MarkdownString("");
+
+const re_syntax = new vscode.CompletionItem('re_syntax', vscode.CompletionItemKind.Method);
+re_syntax.documentation = new vscode.MarkdownString("");
+
+const read = new vscode.CompletionItem('read', vscode.CompletionItemKind.Method);
+read.documentation = new vscode.MarkdownString("Read from a channel.\n\nread (variable or file)");
+
+const registry = new vscode.CompletionItem('registry', vscode.CompletionItemKind.Method);
+registry.documentation = new vscode.MarkdownString("");
+
+const rename = new vscode.CompletionItem('rename', vscode.CompletionItemKind.Method);
+rename.documentation = new vscode.MarkdownString("Rename or delete a command.\n\nrename (oldname) (newname)");
+
+const resource = new vscode.CompletionItem('resource', vscode.CompletionItemKind.Method);
+resource.documentation = new vscode.MarkdownString("");
+
+const scan = new vscode.CompletionItem('scan', vscode.CompletionItemKind.Method);
+scan.documentation = new vscode.MarkdownString("Parse string using conversion specifiers in the style of sscanf.");
+
+const seek = new vscode.CompletionItem('seek', vscode.CompletionItemKind.Method);
+seek.documentation = new vscode.MarkdownString("");
+
+const set = new vscode.CompletionItem('set', vscode.CompletionItemKind.Method);
+set.documentation = new vscode.MarkdownString("");
+
+const socket = new vscode.CompletionItem('socket', vscode.CompletionItemKind.Method);
+socket.documentation = new vscode.MarkdownString("");
+
+const SafeBase = new vscode.CompletionItem('SafeBase', vscode.CompletionItemKind.Method);
+SafeBase.documentation = new vscode.MarkdownString("");
+
+const source = new vscode.CompletionItem('source', vscode.CompletionItemKind.Method);
+source.documentation = new vscode.MarkdownString("");
+
+const split = new vscode.CompletionItem('split', vscode.CompletionItemKind.Method);
+split.documentation = new vscode.MarkdownString("Split a string into a proper Tcl list.\n\nsplit (string) (splitchars)");
+
+const stdin = new vscode.CompletionItem('stdin', vscode.CompletionItemKind.Method);
+stdin.documentation = new vscode.MarkdownString("A part of stdio, this file handle is opened by\ndefault for each application making use of the stdio package\nof code. It is also the name of the standard\ninput channel in Tcl (though Tcl doesn't use stdio). This\ninput file may correspond to a disk file, pipe, terminal\ndevice, or other construct.To refer to the stdin filehandle in\nTcl, use the string stdin as the channel name when\nusing gets.");
+
+const stdout = new vscode.CompletionItem('stdout', vscode.CompletionItemKind.Method);
+stdout.documentation = new vscode.MarkdownString("a part of stdio, this filehandle is opened by default\nfor each application making use of the stdio package of\ncode.This output file may correspond to a disk file, pipe,\nterminal device, or other construct.To refer to this output filehandle\nin Tcl, use the string stdout when using puts.");
+
+const subst = new vscode.CompletionItem('subst', vscode.CompletionItemKind.Method);
+subst.documentation = new vscode.MarkdownString("");
+
+const Tcl = new vscode.CompletionItem('Tcl', vscode.CompletionItemKind.Method);
+Tcl.documentation = new vscode.MarkdownString("Eval takes one or more arguments, which together comprise a\nTcl script containing one or more commands.\n\neval (arg) (arg)");
+
+const tcl_endOfWord = new vscode.CompletionItem('tcl_endOfWord', vscode.CompletionItemKind.Method);
+tcl_endOfWord.documentation = new vscode.MarkdownString("");
+
+const tcl_findLibrary = new vscode.CompletionItem('tcl_findLibrary', vscode.CompletionItemKind.Method);
+tcl_findLibrary.documentation = new vscode.MarkdownString("");
+
+const tcl_startOfNextWord = new vscode.CompletionItem('tcl_startOfNextWord', vscode.CompletionItemKind.Method);
+tcl_startOfNextWord.documentation = new vscode.MarkdownString("");
+
+const tcl_startOfPreviousWord = new vscode.CompletionItem('tcl_startOfPreviousWord', vscode.CompletionItemKind.Method);
+tcl_startOfPreviousWord.documentation = new vscode.MarkdownString("");
+
+const tcl_wordBreakAfter = new vscode.CompletionItem('tcl_wordBreakAfter', vscode.CompletionItemKind.Method);
+tcl_wordBreakAfter.documentation = new vscode.MarkdownString("");
+
+const tcl_wordBreakBefore = new vscode.CompletionItem('tcl_wordBreakBefore', vscode.CompletionItemKind.Method);
+tcl_wordBreakBefore.documentation = new vscode.MarkdownString("");
+
+const tcltest = new vscode.CompletionItem('tcltest', vscode.CompletionItemKind.Method);
+tcltest.documentation = new vscode.MarkdownString("");
+
+const tclvars = new vscode.CompletionItem('tclvars', vscode.CompletionItemKind.Method);
+tclvars.documentation = new vscode.MarkdownString("");
+
+const tell = new vscode.CompletionItem('tell', vscode.CompletionItemKind.Method);
+tell.documentation = new vscode.MarkdownString("");
+
+const time = new vscode.CompletionItem('time', vscode.CompletionItemKind.Method);
+time.documentation = new vscode.MarkdownString("clock - Obtain and manipulate dates and times.");
+
+const trace = new vscode.CompletionItem('trace', vscode.CompletionItemKind.Method);
+trace.documentation = new vscode.MarkdownString("");
+
+const unknown = new vscode.CompletionItem('unknown', vscode.CompletionItemKind.Method);
+unknown.documentation = new vscode.MarkdownString("");
+
+const unset = new vscode.CompletionItem('unset', vscode.CompletionItemKind.Method);
+unset.documentation = new vscode.MarkdownString("Delete variables.\n\nunset (variables");
+
+const update = new vscode.CompletionItem('update', vscode.CompletionItemKind.Method);
+update.documentation = new vscode.MarkdownString("");
+
+const uplevel = new vscode.CompletionItem('uplevel', vscode.CompletionItemKind.Method);
+uplevel.documentation = new vscode.MarkdownString("");
+
+const upvar = new vscode.CompletionItem('upvar', vscode.CompletionItemKind.Method);
+upvar.documentation = new vscode.MarkdownString("");
+
+const variable = new vscode.CompletionItem('variable', vscode.CompletionItemKind.Method);
+variable.documentation = new vscode.MarkdownString("appends values to the value stored in a variable.\n\nappend (variable)\n(value)");
+
+const vwait = new vscode.CompletionItem('vwait', vscode.CompletionItemKind.Method);
+vwait.documentation = new vscode.MarkdownString("Process events until a variable is written.\n\nvwait (varname)");
+
+const argv = new vscode.CompletionItem('argv', vscode.CompletionItemKind.Method);
+argv.documentation = new vscode.MarkdownString("argument list");
+
+const argc = new vscode.CompletionItem('argc', vscode.CompletionItemKind.Method);
+argc.documentation = new vscode.MarkdownString("argument count");
+
+const arg0 = new vscode.CompletionItem('arg0', vscode.CompletionItemKind.Method);
+arg0.documentation = new vscode.MarkdownString("programmname");
+

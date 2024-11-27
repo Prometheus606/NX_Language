@@ -1,0 +1,107 @@
+after
+append 'appends values to the value stored in a variable.\n\nappend (variable) (value)'
+array 'Manipulate array variables'
+auto_execok
+auto_import
+auto_load
+auto_mkindex
+auto_mkindex_old
+auto_qualify
+auto_reset
+bgerror
+binary
+cd  'Changes the current directory to dirName if dirName is given, or to the $HOME directory if dirName is not given. If dirName is a tilde ~, cd changes the working directory to the users home directory. If dirName starts with a tilde, then the rest of the characters are treated as a login id, and cd changes the working directory to that user's $HOME.\n\ncd (dirname)'
+clock   'clock - Obtain and manipulate dates and times.'
+close 'Closes a file opened at runtime.\n\nclose ($filename)'
+concat
+dde
+encoding
+eof
+error
+eval    'Eval takes one or more arguments, which together comprise a Tcl script containing one or more commands.\n\neval (arg) (arg)'
+exec    'This command treats its arguments as the specification of one or more subprocesses to execute. The arguments take the form of a standard shell pipeline where each arg becomes one word of a command, and each distinct command becomes a subprocess.\n\exec (arg) (arg)'
+expr    'The expr command concatenates args, separated by a space, into an expression, and evaluates that expression, returning its value\n\nexpr (arg) (arg)'
+fblocked
+fconfigure
+fcopy
+file    'Commands for file functions'
+fileevent
+filename
+flush
+format 'Format a string in the style of sprintf\n\nformat (formatString) (arg) (arg) ...'
+gets    'Read a line from a channel (a file, commandline input).\n\ngets (variable) Line'
+glob
+global  'Access global variables.\n\nglobal (variable)'
+history
+http
+incr    'Increment the value of a variable.\n\nincr (variable) (value)'
+info    'Return information about the state of the Tcl interpreter.\n\ninfo (option) (arg) (arg)'
+interp
+join    'Join converts a Tcl list into a string. It glues together the elements of a list using a supplied string as element separator. Default is a space.\n\njoin (string1) (string2)'
+lappend 'Append list elements onto a variable.\n\nlappend (variable) (value) (value)'
+library
+lindex  'Retrieve an element from a list.\n\nlindex (list) (index)'
+linsert 'appends values to the value stored in a variable.\n\nappend (variable) (value)'
+list    'Create a list.\n\nlist (arg) (arg)'
+llength 'Count the number of elements in a list.\n\nllength (list)'
+load
+lrange  'Return one or more adjacent elements from a list.\n\nlrange (list) (first) (last)'
+lreplace    'Replace elements in a list with new elements.\n\nlreplace (list) (first) (last) (element) (element) ...'
+lsearch 'See if a list contains a particular element.\n\nlsearch (variable) (value)'
+lset    'Change an element in a list.\n\nlset (variable) (index) (new value)'
+lsort   'Sort the elements of a list.\n\nappend (options) (list)'
+memory
+msgcat
+namespace   'create and manipulate contexts for commands and variables.'
+open    'Open a file-based or command pipeline channel.\nmodes:w,a,r,w+,a+,r+\n\nopen (filename) (mode)'
+package 'Facilities for package loading and version control.\n\nappend (variable) (value)'
+parray
+pid
+pkg::create
+pkg_mkIndex
+proc    
+puts    'Write to a channel.\n\nputs (text)'
+pwd
+regexp
+regsub
+re_syntax
+read    'Read from a channel.\n\nread (variable or file)'
+registry
+rename  'Rename or delete a command.\n\nrename (oldname) (newname)'
+resource
+scan    'Parse string using conversion specifiers in the style of sscanf.'
+seek
+set 'Read and write variables.\n\nset (variablenname) (value)'
+socket
+SafeBase
+source 'Evaluate a file or resource as a Tcl script'
+split   'Split a string into a proper Tcl list.\n\nsplit (string) (splitchars)'
+stdin 'A part of stdio, this file handle is opened by default for each application making use of the stdio package of code. It is also the name of the standard input channel in Tcl (though Tcl doesn't use stdio). This input file may correspond to a disk file, pipe, terminal device, or other construct.To refer to the stdin filehandle in Tcl, use the string stdin as the channel name when using gets.'
+stdout 'a part of stdio, this filehandle is opened by default for each application making use of the stdio package of code.This output file may correspond to a disk file, pipe, terminal device, or other construct.To refer to this output filehandle in Tcl, use the string stdout when using puts.'
+string  'Commands for string manipulation'
+subst
+Tcl
+tcl_endOfWord
+tcl_findLibrary
+tcl_startOfNextWord
+tcl_startOfPreviousWord
+tcl_wordBreakAfter
+tcl_wordBreakBefore
+tcltest
+tclvars
+tell
+time
+trace
+unknown
+unset   'Delete variables.\n\nunset (variables)
+update
+uplevel
+upvar
+variable    'create and initialize a namespace variable.'
+vwait   'Process events until a variable is written.\n\nvwait (varname)'
+
+
+argv    'argument list'
+argc    'argument count'
+arg0    'programmname'
+
