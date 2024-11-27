@@ -168,25 +168,25 @@
 		"prefix": "match",
 		"description": "",
 		"body": [
-		  "[string match \"*${Value}*\" ${cxValue}]"
+		"[string match \"*${Value}*\" ${cxValue}]"
 		]
-	  },
-	  "info exists": {
+	},
+	"info exists": {
 		"prefix": "info exists",
 		"description": "",
 		"body": [
-		  "if {[info exists ${var}]} {",
-		  "\t$0",
-		  "}"
+		"if {[info exists ${var}]} {",
+		"\t$0",
+		"}"
 		]
-	  },
-	  "info exists return": {
+	},
+	"info exists return": {
 		"prefix": "info exists return",
 		"description": "",
 		"body": [
-		  "if {[info exists ${var}]} {return}"
+		"if {[info exists ${var}]} {return}"
 		]
-	  }
+	}
 	
 }
 
