@@ -89,6 +89,9 @@ const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
 let client;
+const {hoverProvider} = require("./provider/hoverProvider");
+const {referenceProvider} = require("./provider/referenceProvider");
+const {symbolProvider} = require("./provider/symbolProvider");
 
 try {
   client = require("./client"); // Lädt client.js
@@ -1123,6 +1126,9 @@ function activate(context) {
       buffer_provider,
       global_provider,
       procedur_provider
+      hoverProvider,
+      symbolProvider,
+      referenceProvider, // Ergebnis: Mit Shift + F12 siehst du alle Vorkommen einer Funktion.
     );
   context.subscriptions.push(
         command_provider,
