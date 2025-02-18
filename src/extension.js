@@ -211,11 +211,6 @@ function manipulateSettings() {
       settingValue,
       vscode.ConfigurationTarget.Global
     ),
-    editorConfig.update(
-      "acceptSuggestionOnCommitCharacter",
-      false,
-      vscode.ConfigurationTarget.Global
-    ),
   ])
     .then(() => {
       // vscode.window.showInformationMessage('Settings updated successfully');
@@ -282,23 +277,6 @@ function activate(context) {
                 }
               }
 
-
-
-
-
-              // 🛠 Text der aktuellen Zeile holen bis zur Cursor-Position
-      // const lineText = document.lineAt(position.line).text.slice(0, position.character);
-
-      // console.log(`🔍 Aktueller Text bis Cursor: ${lineText}`); // Debugging
-      
-      // // 🛠 Prüfen, ob "peter" direkt vor dem Cursor steht
-      // if (!lineText.endsWith(key)) {
-      //   return []; // ❌ Keine Vorschläge, wenn "peter" nicht am Ende steht!
-      // }
-        
-
-
-
               let itemList = [];
               provider.forEach((item) => {
                 const icon = iconMapping[item.icon];
@@ -306,19 +284,12 @@ function activate(context) {
                   const _ = new vscode.CompletionItem(item.command, icon);
                   if (item.snippet)
                     _.insertText = new vscode.SnippetString(item.snippet);
-                  if (item.triggers) _.commitCharacters = item.triggers;
-                  else _.commitCharacters = [" "];
+                  // if (item.triggers) _.commitCharacters = item.triggers;
+                  // else _.commitCharacters = [" "];
                   _.documentation = new vscode.MarkdownString(item.docu);
                   itemList.push(_);
                 }
               });
-
-// // 🛠 **Vorschlagsliste schließen & sofort wieder öffnen**
-// vscode.commands.executeCommand("editor.action.hideSuggest").then(() => {
-//   setTimeout(() => {
-//     vscode.commands.executeCommand("editor.action.triggerSuggest");
-//   }, 50); // Leichte Verzögerung für Stabilität
-// });
 
               return itemList;
             },

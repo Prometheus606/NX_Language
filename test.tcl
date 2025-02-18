@@ -21,3 +21,4 @@ LIB_GE_command_buffer_output
 nika1
 
 
+format %d string
