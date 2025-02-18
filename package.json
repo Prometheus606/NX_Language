@@ -1,124 +1,109 @@
 {
-	"name": "nx",
-	"displayName": "NX Language",
-	"description": "TCL Language Support with Siemens NX Commands",
-	"version": "1.0.2",
-	"publisher": "niklasbeitler",
-	"license": "included LICENSE file",
-	"icon": "images/nx-1.png",
-	"engines": {
-		"vscode": "^1.79.1"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/Prometheus606/NX_Language"
-	},
-	"author": {
-		"name": "Niklas Beitler"
-	},
-	"keywords": [
-		"tcl",
-		"tk",
-		"siemens",
-		"nx",
-		"post",
-		"processor"
-	],
-	"capabilities": {
-		"untrustedWorkspaces": {
-			"supported": true
-		}
-	},
-	"categories": [
-		"Formatters",
-		"Other",
-		"Programming Languages",
-		"Snippets"
-	],
-	"galleryBanner": {
-		"color": "#242424",
-		"theme": "dark"
-	},
-	"contributes": {
-        "languages": [
-            {
-                "id": "NX",
-                "aliases": [
-                    "Tcl",
-                    "nx",
-                    "NX",
-                    "Nx",
-                    "Siemens",
-                    "tcl",
-					"post",
-					"processor"
-                ],
-                "extensions": [
-                    ".tcl"
-                ],
-                "configuration": "./nx.configuration.json"
-            }
+  "name": "nx-postprocessor",
+  "displayName": "NX Postprocessor",
+  "description": "TCL Language Support with Siemens NX Commands for developing postprocessors",
+  "version": "1.0.0",
+  "publisher": "niklasbeitler",
+  "license": "included LICENSE file",
+  "icon": "images/nx-1.png",
+  "engines": {
+    "vscode": "^1.97.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Prometheus606/NX_Language"
+  },
+  "author": {
+    "name": "Niklas Beitler"
+  },
+  "main": "./src/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./language_server/typescript",
+    "lint": "tslint -p ./language_server/typescript",
+    "watch": "tsc -watch -p ./language_server/typescript"
+  },
+  "activationEvents": [
+    "*"
+  ],
+  "keywords": [
+    "tcl",
+    "tk",
+    "siemens",
+    "nx",
+    "post",
+    "processor"
+  ],
+  "categories": [
+    "Formatters",
+    "Other",
+    "Programming Languages",
+    "Snippets"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  },
+  "galleryBanner": {
+    "color": "#242424",
+    "theme": "dark"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "tcl",
+        "aliases": [
+          "Tcl",
+          "nx",
+          "NX",
+          "Nx",
+          "Siemens",
+          "tcl",
+          "post",
+          "processor"
         ],
-        "grammars": [
-            {
-                "language": "NX",
-                "scopeName": "source.tcl",
-                "path": "./syntaxes/nx.tmLanguage"
-            }
+        "extensions": [
+          ".tcl"
         ],
-        "snippets": [
-            {
-                "language": "NX",
-                "path": "./snippets/tcl_snippets.json"
-            },
-            {
-                "language": "NX",
-                "path": "./snippets/nx_snippets.json"
-            }
-        ],
-		"configuration": {
-			"title": "NX_Language",
-			"properties": {
-				"NX_Language.MOM_Color": {
-					"type": "string",
-					"default": "#e26fdb",
-					"description": "Customizes the MOM Command colors in the editor."
-				},
-				"NX_Language.LIB_Color": {
-					"type": "string",
-					"default": "#e25c14",
-					"description": "Customizes the LIB Command colors in the editor."
-				}
-			}
-		}
-    },
-
-	"activationEvents": [
-		"onLanguage:tcl"
-	],
-	"main": "./language_server/extension.js",
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./language_server/typescript",
-		"lint": "tslint -p ./language_server/typescript",
-		"watch": "tsc -watch -p ./language_server/typescript"
-	},
-	"devDependencies": {
-		"@types/node": "^10.12.18",
-		"tslint": "^5.16.0",
-		"typescript": "^3.5.1"
-	},
-	"__metadata": {
-		"id": "",
-		"publisherId": "",
-		"publisherDisplayName": "Niklas Beitler",
-		"targetPlatform": "undefined",
-		"updated": false,
-		"isPreReleaseVersion": false,
-		"installedTimestamp": 1686813325633,
-		"preRelease": false
-	},
-	"dependencies": {
-		"vsce": "^2.15.0"
-	}
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "tcl",
+        "scopeName": "source.tcl",
+        "path": "./syntaxes/tcl.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "tcl",
+        "path": "./snippets/tcl_snippets.json"
+      },
+      {
+        "language": "tcl",
+        "path": "./snippets/nx_snippets.json"
+      }
+    ],
+    "configuration": {
+      "title": "NX_Postprocessor",
+      "properties": {
+        "NX_Postprocessor.MOM_Color": {
+          "type": "string",
+          "default": "#e26fdb",
+          "description": "Customizes the MOM Command colors in the editor."
+        },
+        "NX_Postprocessor.LIB_Color": {
+          "type": "string",
+          "default": "#e25c14",
+          "description": "Customizes the LIB Command colors in the editor."
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1",
+    "vscode-languageserver": "^9.0.1"
+  }
 }
