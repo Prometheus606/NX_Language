@@ -1,7 +1,2 @@
-- commitcharacters entfernen oder auf " " setzen, wegen denen kam das problem mit dem automatischen setzen der variable.
-  die einstellungsänderung kann dann auch weg
-  - go to definition klappt noch nicht
-  - variablen und befehle sollen nur erscheinen wenn ich bestimmte zeichenfolgen angebe damit die liste nicht zu voll ist
-  - code separieren und optimieren
-  - hover einbauen
-  - bessere lösung für verwendete wörter, definierte procs und variablen möglich?
+- alle farben anpassbar machen
+- alle dateien im project durchsuchen nicht nur eine

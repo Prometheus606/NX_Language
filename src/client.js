@@ -16,10 +16,13 @@ function activate(context) {
   };
 
   const clientOptions = {
-    documentSelector: [{ scheme: "file", language: "tcl" }],
+    documentSelector: [{ language: "tcl" }],
     synchronize: {
       configurationSection: "tclLanguageServer",
-      fileEvents: vscode.workspace.createFileSystemWatcher("**/.tcl"),
+      fileEvents: vscode.workspace.createFileSystemWatcher("**/*.tcl"),
+    },
+    initializationOptions: {
+      provideDefinition: true,
     },
   };
 
@@ -27,9 +30,6 @@ function activate(context) {
   client = new LanguageClient("tclLanguageServer", "Tcl Language Server", serverOptions, clientOptions);
   client.start();
 }
-
-
-
 
 function deactivate() {
   return client ? client.stop() : undefined;
