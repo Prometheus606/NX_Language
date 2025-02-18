@@ -14,17 +14,6 @@ const {
   const connection = createConnection(ProposedFeatures.all);
   const documents = new TextDocuments();
 
-  // connection.onInitialize((params) => {
-  //   return {
-  //     capabilities: {
-  //       textDocumentSync: 1,
-  //       completionProvider: {
-  //         resolveProvider: true
-  //       }
-  //     }
-  //   };
-  // });
-
   // ########################## get definition of proc ###########################
   const functionDefinitions = new Map();
 documents.onDidChangeContent((change) => {
@@ -64,28 +53,28 @@ documents.onDidChangeContent((change) => {
   });
 
   // ########################## linter ###########################
-  // documents.onDidChangeContent((change) => {
-  //   const text = change.document.getText();
-  //   const diagnostics = [];
+  documents.onDidChangeContent((change) => {
+    const text = change.document.getText();
+    const diagnostics = [];
   
-  //   const invalidVars = text.match(/\$\d+/g); // Variablen dürfen nicht mit einer Zahl beginnen
-  //   if (invalidVars) {
-  //     invalidVars.forEach((match) => {
-  //       const index = text.indexOf(match);
-  //       diagnostics.push({
-  //         severity: 1, // Error
-  //         range: {
-  //           start: { line: 0, character: index },
-  //           end: { line: 0, character: index + match.length }
-  //         },
-  //         message: `Ungültiger Variablenname: ${match}`,
-  //         source: "tcl-linter"
-  //       });
-  //     });
-  //   }
+    const invalidVars = text.match(/\$\d+/g); // Variablen dürfen nicht mit einer Zahl beginnen
+    if (invalidVars) {
+      invalidVars.forEach((match) => {
+        const index = text.indexOf(match);
+        diagnostics.push({
+          severity: 1, // Error
+          range: {
+            start: { line: 0, character: index },
+            end: { line: 0, character: index + match.length }
+          },
+          message: `Ungültiger Variablenname: ${match}`,
+          source: "tcl-linter"
+        });
+      });
+    }
   
-  //   connection.sendDiagnostics({ uri: change.document.uri, diagnostics });
-  // });
+    connection.sendDiagnostics({ uri: change.document.uri, diagnostics });
+  });
   
 
 documents.listen(connection);

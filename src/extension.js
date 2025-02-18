@@ -51,6 +51,11 @@ function activate(context) {
       context.subscriptions.push(provider);
     });
 
+    // formater einbinden (rechte Maustaste → "Format Document": Code wird formatiert)
+    context.subscriptions.push(
+      vscode.languages.registerDocumentFormattingEditProvider("tcl", new TclFormatter())
+    );
+
 }
 
 function deactivate() {
