@@ -1,2 +1,9 @@
+- der formater kommt raus wenn code blöcke mit verschachtelungen auskommentiert sind
+- der linter meckert falsch.
+    - variablen die als funktionsargumente oder in schleifen definiert werden sollen im jeweiligen scope erkannt werden
+    - variablen die in der completitionitems.json definiert sind sollen erkannt werden
+    - variablen aus funktionen wie MTX3_vec_multiply, wo am ende eine neue erstellt wird, sollen erkannt werden
+    - json file mit immer noch roten variablen ergänzen
+    - im ganzen workspace laufen lassen
 - alle farben anpassbar machen
 - alle dateien im project durchsuchen nicht nur eine

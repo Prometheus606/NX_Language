@@ -2,7 +2,7 @@
   "name": "nx-postprocessor",
   "displayName": "NX Postprocessor",
   "description": "TCL Language Support with Siemens NX Commands for developing postprocessors",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "publisher": "niklasbeitler",
   "license": "included LICENSE file",
   "icon": "images/nx-1.png",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Prometheus606/NX_Language"
+    "url": "https://github.com/Prometheus606/NX_Postprocessor"
   },
   "author": {
     "name": "Niklas Beitler"
@@ -19,12 +19,12 @@
   "main": "./src/extension.js",
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./language_server/typescript",
-    "lint": "tslint -p ./language_server/typescript",
-    "watch": "tsc -watch -p ./language_server/typescript"
+    "compile": "tsc -p ./server/typescript",
+    "lint": "tslint -p ./server/typescript",
+    "watch": "tsc -watch -p ./server/typescript"
   },
   "activationEvents": [
-    "*"
+    "onLanguage:tcl"
   ],
   "keywords": [
     "tcl",
@@ -109,5 +109,10 @@
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.12"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "tslint": "^6.1.3",
+    "typescript": "^5.7.3"
   }
 }

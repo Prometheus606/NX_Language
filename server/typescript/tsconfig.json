@@ -1,0 +1,19 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "lib": [ "es5", "dom" ],
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "noEmitOnError": true,
+      "noImplicitAny": false,
+      "outDir": "../wwwroot/app/",
+      "removeComments": false,
+      "sourceMap": true,
+      "target": "es6"
+    },
+    "exclude": [
+      "node_modules/*"
+    ]
+}
