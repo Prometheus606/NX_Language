@@ -1,96 +1,34 @@
+proc Daniela { } {
+    set niklas 0
+    puts $niklas
 
-set test1 1
+MTX3_add m n a
+MTX3_init_x_y_z 1 99 3 b
+MTX3_multiply q w c
+MTX3_vec_multiply q w d
+MTX3_x w ww e
+MTX3_y w rr f
+MTX3_z w gg g
+MTX3_transpose w h
 
+VEC3_add t z i
+VEC3_init a s d j
+VEC3_init_s a s d k
 
-proc testProc1 {} {
-    global test7
-    puts $test1 ;# ist richtig, passt
-    puts $::test1 ;# ist richtig, passt
-    puts $::test3 ;# soll meckern, passt
-    puts $test3 ;# soll meckern, passt
-    puts $test4 ;# soll meckern, passt nicht -
-    puts $::test4 ;# ist richtig, passt
-    puts $test6 ;# soll meckern, passt nicht -
-    puts $::test6 ;# ist richtig
-    puts $::test2 ;# soll meckern, passt
-    puts $test2 ;# soll meckern, passt
-    puts $test7 ;# soll nicht meckern
-}
+$a
+$b
+$c
+$d
+$e
+$f
+$g
+$h
+$i
+$j
+$k
 
-
-
-
-proc testProc2 {} {
-    global test6
-    global test7
-
-    set test3 5
-    set ::test4 6
-    set test6 5
-    set test7 10
-
-}
-  
-
-#------------------------------------------------------------
-proc Daniela {} {
-  #------------------------------------------------------------
-  LIB_GE_command_buffer hansgeorg
-  LIB_GE_command_buffer {
-
-    set registry $::levi
-
-  } @hansgeorg
-  LIB_GE_command_buffer_output
-}
-
-# niklas
-set hans ""
-
-mom_pos(0)
-LIB_GE_ui
-MOM_abort
-mom_kin_4th_axis_ang_offset
-set 2brot "Daniela"
-
-puts $::2brot
-puts ::2brot
-
-LIB_GE_command_buffer sdssd
-LIB_GE_command_buffer {if {[llength [info commands sdssd]]} {sdssd}} @sdssd
-LIB_GE_command_buffer_output
-
-
-format %d string
-
-
-daniela
-Daniela
-
-
-#------------------------------------------------------------
-proc + {} {
-  #------------------------------------------------------------
+CxCoolant "get" cxCoolantList
+$cxCoolantList 
 
 }
 
-
-
-MOM_suppress once
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-test
