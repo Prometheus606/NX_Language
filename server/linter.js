@@ -1,5 +1,6 @@
 // ##################### Linter (Fehlersuche für Variablen) #####################
 const { rules } = require("./linterRules");
+const { loadCompletitionItems, loadIgnoreItems } = require("../src/utils");
 
 function runLinter(document) {
   const text = document.getText();
@@ -83,13 +84,18 @@ function runLinter(document) {
   let insideFunction = false; // Ist der Parser in einer Funktion?
   let braceCount = 0;
 
-  // get variables from json file
-  const { loadCompletitionItems } = require("../src/utils");
+  // get variables from completitionItems json file
   const completitionItems = loadCompletitionItems();
   completitionItems.provideCompletionItems.mom.forEach((item) => {
     if (item.command) {
       globalVariables.add(item.command);
     }
+  });
+
+  // get variables from dictionary json file
+  const ignoreDictionary = loadIgnoreItems();
+  ignoreDictionary.forEach((item) => {
+      globalVariables.add(item);
   });
 
   lines.forEach((line, lineNumber) => {

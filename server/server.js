@@ -5,7 +5,7 @@ const {
   TextDocumentSyncKind
 } = require('vscode-languageserver/node');
 const { TextDocument } = require('vscode-languageserver-textdocument');
-const {runLinter} = require("./linter")
+const { runLinter } = require("./linter")
 
 
 // ======================== helper functions ===========================

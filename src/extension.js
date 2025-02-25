@@ -8,7 +8,8 @@ const {providerList, command_provider} = require("./provider/commandsProvider");
 const {hoverProvider} = require("./provider/hoverProvider");
 const {referenceProvider} = require("./provider/referenceProvider");
 const {symbolProvider} = require("./provider/symbolProvider");
-const {manipulateSettings} = require("./settingsManipulation");
+const { manipulateSettings } = require("./settingsManipulation");
+const {add2Dictionary} = require("./addToDictionary")
 const { 
   words_provider,
   variable_provider,
@@ -17,20 +18,21 @@ const {
   procedur_provider
 } = require("./provider/wordsProvider");
 
-let client;
-try {
-  client = require("./client"); // Lädt client.js
-} catch (error) {
-  console.error("Fehler beim Laden von client.js:", error);
-}
-
 function activate(context) {
 
-  // Falls client.js korrekt geladen wurde, dann starten
-  if (client && typeof client.activate === "function") {
-    client.activate(context);
-  } else {
-    console.warn("Client konnte nicht aktiviert werden.");
+  if (!context) {
+    vscode.window.showErrorMessage("Error: context is not defined1!");
+    return;
+  }
+
+  let client;
+  try {
+    client = require("./client");
+    if (client && typeof client.activate === "function") {
+      client.activate(context);
+    }
+  } catch (error) {
+    console.error("Fehler beim Laden von client.js:", error);
   }
 
   manipulateSettings();
@@ -45,6 +47,7 @@ function activate(context) {
       hoverProvider,
       symbolProvider,
       referenceProvider, // Ergebnis: Mit Shift + F12 siehst du alle Vorkommen einer Funktion.
+      add2Dictionary(context.extensionPath),
     );
 
     providerList.forEach((provider) => {

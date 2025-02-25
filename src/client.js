@@ -6,10 +6,8 @@ const { LanguageClient, TransportKind } = require("vscode-languageclient/node");
 let client;
 
 function activate(context) {
-  // Pfad zum Language Server (server.js)
   const serverModule = context.asAbsolutePath(path.join("server", "server.js"));
 
-  // Konfiguriere die Verbindung
   const serverOptions = {
     run: { module: serverModule, transport: TransportKind.stdio },
     debug: { module: serverModule, transport: TransportKind.stdio },
@@ -26,7 +24,6 @@ function activate(context) {
     },
   };
 
-  // Language Client starten
   client = new LanguageClient("tclLanguageServer", "Tcl Language Server", serverOptions, clientOptions);
   client.start();
 }
