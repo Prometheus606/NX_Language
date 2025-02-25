@@ -1,5 +1,2 @@
-- der formater kommt raus wenn code blöcke mit verschachtelungen auskommentiert sind
-- der linter meckert falsch.
-    - im ganzen workspace laufen lassen
+- linter und extension im ganzen workspace laufen lassen
 - alle farben anpassbar machen
-- alle dateien im project durchsuchen nicht nur eine

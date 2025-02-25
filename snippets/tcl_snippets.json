@@ -2,7 +2,7 @@
 	 "For Loop": {
 		"prefix": "for",
 		"body": [
-            "for {set ${index} 0} { $${index} < [llength $${list}] } { incr ${index} } {",
+            "for {set ${1:index} 0} { $${1:index} < [llength $${2:list}] } { incr ${1:index} } {",
             "\t$0",
             "}"
 		],
@@ -11,7 +11,7 @@
 	"Foreach Loop": {
 		"prefix": "foreach",
 		"body": [
-            "foreach ${var} ${list} {",
+            "foreach ${1:var} ${2:list} {",
             "\t$0",
             "}"
 		],
@@ -20,7 +20,7 @@
 	"If Condition": {
 		"prefix": "if",
 		"body": [
-            "if {${var}} {",
+            "if {${1:var}} {",
             "\t$0",
             "}"
 		],
@@ -29,7 +29,7 @@
 	"ElseIf Condition": {
 		"prefix": "elseif",
 		"body": [
-            "elseif {${var}} {",
+            "elseif {${1:var}} {",
             "\t$0",
             "}"
 		],
@@ -48,7 +48,7 @@
 		"prefix": ["proc", "newproc"],
 		"body": [
 			"#------------------------------------------------------------",
-            "proc ${name} {} {",
+            "proc ${1:name} {} {",
 			"#------------------------------------------------------------",
             "\t$0",
             "}"
@@ -58,7 +58,7 @@
 	"While Lopp": {
 		"prefix": "while",
 		"body": [
-            "while {${var}} {",
+            "while {${1:var}} {",
             "\t$0",
             "}"
 		],
@@ -168,14 +168,14 @@
 		"prefix": "match",
 		"description": "",
 		"body": [
-		"[string match \"*${Value}*\" ${cxValue}]"
+		"[string match \"*${1:string}*\" ${2:var}]"
 		]
 	},
 	"info exists": {
 		"prefix": "info exists",
 		"description": "",
 		"body": [
-		"if {[info exists ${var}]} {",
+		"if {[info exists ${1:var}]} {",
 		"\t$0",
 		"}"
 		]
@@ -184,7 +184,7 @@
 		"prefix": "info exists return",
 		"description": "",
 		"body": [
-		"if {[info exists ${var}]} {return}"
+		"if {[info exists ${1:var}]} {return}"
 		]
 	}
 	

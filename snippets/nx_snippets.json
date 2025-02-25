@@ -179,10 +179,10 @@
 	"LongBuffer": {
 		"prefix": "newLongBuffer",
 		"body": [
-			"LIB_GE_command_buffer ${var}",
+			"LIB_GE_command_buffer ${1:var}",
       		"LIB_GE_command_buffer {",
 			  "\n\t$0\n",
-      		"} @${var}",
+      		"} @${1:var}",
       		"LIB_GE_command_buffer_output"
             
 		],
@@ -191,8 +191,8 @@
 	"ShortBuffer": {
 		"prefix": "newShortBuffer",
 		"body": [
-			"LIB_GE_command_buffer ${var}",
-      		"LIB_GE_command_buffer {if {[llength [info commands ${var}]]} {${var}}} @${var}",
+			"LIB_GE_command_buffer ${1:var}",
+      		"LIB_GE_command_buffer {if {[llength [info commands ${1:var}]]} {${1:var}}} @${1:var}",
       		"LIB_GE_command_buffer_output$0"
             
 		],
@@ -202,8 +202,8 @@
 		"prefix": "get_pretreatment",
 		"description": "",
 		"body": [
-		  "if {[LIB_SPF_pt_exists ${cxVarName}]} {",
-		  "\tset ${cxVarName} [LIB_SPF_get_pretreatment ${cxVarName} 0]",
+		  "if {[LIB_SPF_pt_exists ${1:var}]} {",
+		  "\tset ${1:var} [LIB_SPF_get_pretreatment ${1:var} 0]",
 		  "}"
 		]
 	  },
@@ -213,10 +213,10 @@
 		"body": [
 		  "\r",
 		  "#------------------------------------------------------------\r",
-		  "proc LIB_SPF_pt_additional_variables_CxUdeName {} {\r",
+		  "proc LIB_SPF_pt_additional_variables_${1:UdeName} {} {\r",
 		  "#------------------------------------------------------------\r",
-		  "\tLIB_SPF_pretreatment_add_var MOM_initial_move mom_cxUdeVar 0\r",
-		  "\tLIB_SPF_pretreatment_add_var MOM_first_move mom_cxUdeVar 0\r",
+		  "\tLIB_SPF_pretreatment_add_var MOM_initial_move ${2:mom_UdeVar} 0\r",
+		  "\tLIB_SPF_pretreatment_add_var MOM_first_move ${2:mom_UdeVar} 0\r",
 		  "}"
 		]
 	  },
@@ -224,8 +224,8 @@
 		"prefix": "get_header_pretreatment",
 		"description": "",
 		"body": [
-		  "if {[LIB_PT_get_header_var ${cxVarName} exists]} {",
-		  "\tset ${cxVarName} [LIB_PT_get_header_var ${cxVarName}]",
+		  "if {[LIB_PT_get_header_var ${1:var} exists]} {",
+		  "\tset ${1:var} [LIB_PT_get_header_var ${1:var}]",
 		  "}"
 		]
 	  }

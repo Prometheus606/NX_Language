@@ -10,7 +10,7 @@ class TclFormatter {
       let line = document.lineAt(i);
       let text = line.text.trim();
 
-      if (text === "") continue; // Leere Zeilen ignorieren
+      if (text === "" || text.startsWith("#")) continue; // Leere Zeilen ignorieren
 
       // Verringere Einrückung, wenn eine schließende Klammer am Anfang der Zeile steht
       if (text.startsWith("}")) {
