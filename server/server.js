@@ -5,7 +5,6 @@ const {
   TextDocumentSyncKind
 } = require('vscode-languageserver/node');
 const { TextDocument } = require('vscode-languageserver-textdocument');
-const { runLinter } = require("./linter")
 
 
 // ======================== helper functions ===========================
@@ -79,13 +78,6 @@ connection.onDefinition((params) => {
 
   console.log("Keine Definition gefunden.");
   return null;
-});
-
-// ##################### Event-Handler für Dokumentänderungen #####################
-documents.onDidChangeContent((change) => {
-  updateFunctionDefinitions(change.document);
-  const config = runLinter(change.document);
-  connection.sendDiagnostics(config);
 });
 
 

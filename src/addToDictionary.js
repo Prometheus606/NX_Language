@@ -1,7 +1,6 @@
 const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
-const { runLinter } = require("../server/linter")
 
 async function addWordToDictionary(word, extensionPath) {
     const filePath = path.join(extensionPath, "src", 'dictionary.json')

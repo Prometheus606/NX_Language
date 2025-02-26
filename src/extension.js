@@ -9,7 +9,8 @@ const {hoverProvider} = require("./provider/hoverProvider");
 const {referenceProvider} = require("./provider/referenceProvider");
 const {symbolProvider} = require("./provider/symbolProvider");
 const { manipulateSettings } = require("./settingsManipulation");
-const {add2Dictionary} = require("./addToDictionary")
+const { add2Dictionary } = require("./addToDictionary")
+const { runLinter } = require('./linter/linter');
 const { 
   words_provider,
   variable_provider,
@@ -17,6 +18,26 @@ const {
   global_provider,
   procedur_provider
 } = require("./provider/wordsProvider");
+
+async function lintDocument(document, diagnosticsCollection) {
+  if (document.languageId !== 'tcl') return;
+
+  let results = await runLinter(document);
+
+  const severitys = {
+    1: vscode.DiagnosticSeverity.Error,
+    2: vscode.DiagnosticSeverity.Warning,
+    3: vscode.DiagnosticSeverity.Information,
+    4: vscode.DiagnosticSeverity.Hint,
+  }
+
+  let diagnostics = results.diagnostics.map(error => {
+    let range = new vscode.Range(error.range.start.line, error.range.start.character, error.range.end.line, error.range.end.character);
+      return new vscode.Diagnostic(range, error.message, severitys[error.severity]);
+  });
+
+  diagnosticsCollection.set(document.uri, diagnostics);
+}
 
 function activate(context) {
 
@@ -36,6 +57,12 @@ function activate(context) {
   }
 
   manipulateSettings();
+
+  // start linter
+  let diagnosticsCollection = vscode.languages.createDiagnosticCollection('tcl-linter');
+  vscode.workspace.onDidOpenTextDocument(doc => lintDocument(doc, diagnosticsCollection));
+  vscode.workspace.onDidChangeTextDocument(event => lintDocument(event.document, diagnosticsCollection));
+  vscode.workspace.textDocuments.forEach(doc => lintDocument(doc, diagnosticsCollection));
   
     context.subscriptions.push(
       command_provider,

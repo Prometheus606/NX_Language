@@ -407,6 +407,10 @@
             {"command": "mom_cycle_type", "icon": "Variable", "docu": ""},
             {"command": "mom_tool_axis", "icon": "Variable", "docu": ""},
             {"command": "mom_tool_path_type", "icon": "Variable", "docu": ""},
+            {"command": "mom_logname", "icon": "Variable", "docu": ""},
+            {"command": "mom_vertical_pitch_value_source", "icon": "Variable", "docu": ""},
+            {"command": "mom_cycle_thread_pitch", "icon": "Variable", "docu": ""},
+            {"command": "mom_part_name", "icon": "Variable", "docu": ""},
             {"command": "is_last_oper_in_programm", "icon": "Variable", "docu": ""},
             {"command": "lib_coord_ref_X", "icon": "Variable", "docu": ""},
             {"command": "lib_coord_ref_Y", "icon": "Variable", "docu": ""},
@@ -418,7 +422,10 @@
             {"command": "lib_spf", "icon": "Variable", "docu": ""},
             {"command": "lib_main_zero_register", "icon": "Variable", "docu": ""},
             {"command": "RAD2DEG", "icon": "Variable", "docu": ""},
-            {"command": "DEG2RAD", "icon": "Variable", "docu": ""}
+            {"command": "DEG2RAD", "icon": "Variable", "docu": ""},
+            {"command": "env", "icon": "Variable", "docu": ""},
+            {"command": "tcl_version", "icon": "Variable", "docu": ""},
+            {"command": "lib_ge_pretreatment_runtime", "icon": "Variable", "docu": ""}
 
         ],
         "MOM": [

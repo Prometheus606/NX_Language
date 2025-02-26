@@ -1,10 +1,29 @@
 // ##################### Linter (Fehlersuche für Variablen) #####################
 const { rules } = require("./linterRules");
-const { loadCompletitionItems, loadIgnoreItems } = require("../src/utils");
+const { loadCompletitionItems, loadIgnoreItems, getFilesInWorkspace } = require("../utils");
+const vscode = require('vscode');
 
-function runLinter(document) {
+// let globalVariables = new Set(); // Alle bekannten globalen Variablen
+// let functionScopes = []; // Aktive Funktionen
+// let diagnostics = [];
+
+// async function test(document) {
+//   globalVariables = new Set(); // Alle bekannten globalen Variablen
+//   functionScopes = []; // Aktive Funktionen
+//   diagnostics = [];
+//   const files = getFilesInWorkspace(vscode.workspace.workspaceFolders)
+//   for (const file of files) {
+//     let document = await vscode.workspace.openTextDocument(file);
+//     await runLinter(document)
+//   }
+//   return {diagnostics}
+// }
+
+async function runLinter(document) {
   const text = document.getText();
   const diagnostics = [];
+  let globalVariables = new Set(); // Alle bekannten globalen Variablen
+  let functionScopes = []; // Aktive Funktionen
   const lines = text.split("\n");
 
   // Regeln für allgemeine Linter-Überprüfung aus der rules datei
@@ -79,8 +98,6 @@ function runLinter(document) {
   });
 
   // ================== Variablen erkennung ================================
-  const globalVariables = new Set(); // Alle bekannten globalen Variablen
-  let functionScopes = []; // Aktive Funktionen
   let insideFunction = false; // Ist der Parser in einer Funktion?
   let braceCount = 0;
 
@@ -97,6 +114,67 @@ function runLinter(document) {
   ignoreDictionary.forEach((item) => {
       globalVariables.add(item);
   });
+
+  // read variables in all files in workspace
+  const files = getFilesInWorkspace(vscode.workspace.workspaceFolders)
+  for (const file of files) {
+    let document = await vscode.workspace.openTextDocument(file);
+    const text = document.getText();
+    const lines = text.split("\n");
+    let insideFunction = false; // Ist der Parser in einer Funktion?
+    let braceCount = 0;
+
+    lines.forEach((line, lineNumber) => {
+      const functionDef = line.match(/^proc\s+(\w+)\s*\{([^}]*)\}/);
+    if (functionDef) {
+        insideFunction = true;
+        braceCount = 1; // Start-Klammer erkannt
+
+        const functionName = functionDef[1];
+        const args = functionDef[2]
+            .split(/\s+/)
+            .filter(arg => arg.trim() !== ""); // Leere Einträge filtern
+
+        functionScopes.push({
+            lineNumber,
+            functionName,
+          localGlobals: new Set(args), // Argumente als lokale Variablen speichern
+          loopScopes: [], 
+        });
+    }
+
+    // Klammern zählen
+    braceCount += (line.match(/{/g) || []).length;
+    braceCount -= (line.match(/}/g) || []).length;
+
+    // Prüfen, ob eine Funktion endet
+    if (insideFunction && braceCount === 0) {
+        insideFunction = false;
+      }
+      
+      // Erfassen globaler Variablen mit `set` außerhalb einer `proc`
+      if (!insideFunction) {
+        const setMatch = line.match(/set\s+(\w+)/);
+        if (setMatch) globalVariables.add(setMatch[1]);
+
+        const globalSetMatch = line.match(/set\s+::(\w+)/);
+        if (globalSetMatch) globalVariables.add(globalSetMatch[1]);
+      }
+
+      // Erfassen von `global var1 var2`
+      const globalKeywordMatch = line.match(/^\s*global\s+(.+)/);
+      if (globalKeywordMatch && insideFunction) {
+        const currentFunction = functionScopes[functionScopes.length - 1];
+        globalKeywordMatch[1].split(/\s+/).forEach((varName) => {
+          if (varName.trim().length > 0) {
+            currentFunction.localGlobals.add(varName.trim());
+            globalVariables.add(varName.trim()); // Direkt auch als global markieren
+          }
+        });
+      }
+    });
+  }
+  document = await vscode.workspace.openTextDocument(document);
 
   lines.forEach((line, lineNumber) => {
     // Funktionsbeginn erkennen
@@ -128,32 +206,29 @@ function runLinter(document) {
     }
   });
 
-  
-
   // Durchgang 1: Erfassen globaler Variablen
-  lines.forEach((line, lineNumber) => {
-    // Erfassen globaler Variablen mit `set` außerhalb einer `proc`
-    if (!insideFunction) {
+    lines.forEach((line, lineNumber) => {
+      // Erfassen globaler Variablen mit `set` außerhalb einer `proc`
+      if (!insideFunction) {
         const setMatch = line.match(/set\s+(\w+)/);
         if (setMatch) globalVariables.add(setMatch[1]);
 
         const globalSetMatch = line.match(/set\s+::(\w+)/);
         if (globalSetMatch) globalVariables.add(globalSetMatch[1]);
-    }
+      }
 
-    // Erfassen von `global var1 var2`
-    const globalKeywordMatch = line.match(/^\s*global\s+(.+)/);
-    if (globalKeywordMatch && insideFunction) {
+      // Erfassen von `global var1 var2`
+      const globalKeywordMatch = line.match(/^\s*global\s+(.+)/);
+      if (globalKeywordMatch && insideFunction) {
         const currentFunction = functionScopes[functionScopes.length - 1];
         globalKeywordMatch[1].split(/\s+/).forEach((varName) => {
-            if (varName.trim().length > 0) {
-                currentFunction.localGlobals.add(varName.trim());
-                globalVariables.add(varName.trim()); // Direkt auch als global markieren
-            }
+          if (varName.trim().length > 0) {
+            currentFunction.localGlobals.add(varName.trim());
+            globalVariables.add(varName.trim()); // Direkt auch als global markieren
+          }
         });
-    }
-  });
-
+      }
+    });
 
   // Überprüfung der Variablenverwendung
   lines.forEach((line, lineNumber) => {
@@ -209,7 +284,6 @@ function runLinter(document) {
       line.match(/^\s*MTX3_init_x_y_z\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)/),
       line.match(/^\s*VEC3_init\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)/),
       line.match(/^\s*VEC3_init_s\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)/),
-      line.match(/^\s*Cx\s+\"get\"\s+(\S+)/),
       line.match(/^\s*Cx\w*\s+"get"\s+(\S+)/),
     ];
     customFuncMatches.forEach(customFuncMatch => {
@@ -244,8 +318,6 @@ function runLinter(document) {
       // **Korrektur 3:** Falls `variable` innerhalb einer `proc` mit `global` markiert wurde, ist sie gültig.
       if (currentFunction && currentFunction.localGlobals.has(variable)) continue;
       
-      // console.log(currentFunction);
-      
       if (
         currentFunction &&
         currentFunction.loopScopes.some(scope => scope.loopVariables.has(variable))
@@ -255,7 +327,7 @@ function runLinter(document) {
       // **Korrektur 4:** Falls `variable` innerhalb einer anderen `proc` global markiert wurde, ist sie gültig.
       let ExistsInAnotherFunction = functionScopes.some(scope => scope.localGlobals.has(variable));
       if (ExistsInAnotherFunction) continue;
-
+    
       // Fehlerfall: Die Variable ist weder global noch korrekt deklariert.
       diagnostics.push({
         severity: 1,

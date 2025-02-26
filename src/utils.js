@@ -28,8 +28,9 @@ function loadIgnoreItems() {
 }
 
 // Funktion zum Durchsuchen des Workspace-Verzeichnisses
-function getFilesInWorkspace(workspaceDir) {
+function getFilesInWorkspace(workspaceFolders) {
   let files = [];
+  const blacklistedFiles = ["lib_sourcing.tcl", "lib_pretreatment.tcl"]
   
   function readDir(dir) {
     const items = fs.readdirSync(dir);
@@ -38,13 +39,16 @@ function getFilesInWorkspace(workspaceDir) {
       const stat = fs.statSync(fullPath);
       if (stat.isDirectory()) {
         readDir(fullPath); // Rekursiv in Unterverzeichnisse
-      } else if (fullPath.endsWith('.tcl')) {
+      } else if (fullPath.endsWith('.tcl') && !blacklistedFiles.includes(item)) {
         files.push(fullPath); // Nur .tcl-Dateien hinzufügen
       }
     });
   }
   
-  readDir(workspaceDir);
+  for (const folder of workspaceFolders) {
+    readDir(folder.uri.fsPath);
+  }
+
   return files;
 }
 

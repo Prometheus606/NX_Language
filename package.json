@@ -101,6 +101,21 @@
         }
       }
     },
+    "commands": [
+      {
+        "command": "extension.addWordToDictionary",
+        "title": "Zum Wörterbuch hinzufügen"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "extension.addWordToDictionary",
+          "when": "editorTextFocus",
+          "group": "navigation"
+        }
+      ]
+    },
     "languageFeatures": {
       "definitionProvider": true
     }
