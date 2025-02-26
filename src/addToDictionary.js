@@ -3,7 +3,11 @@ const fs = require("fs");
 const path = require("path");
 
 async function addWordToDictionary(word, extensionPath) {
-    const filePath = path.join(extensionPath, "src", 'dictionary.json')
+    const filePath = path.join(
+      extensionPath,
+      "src",
+      "linterignore_custom.json"
+    );
     
     let words = [];
     if (fs.existsSync(filePath)) {

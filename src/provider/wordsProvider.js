@@ -1,8 +1,8 @@
 const vscode = require("vscode");
-const {loadCompletitionItems} = require("../utils");
+const { readJsonFile } = require("../utils");
 
 // read json file
-const completitionItems = loadCompletitionItems();
+const completitionItems = readJsonFile("completitionItems.json");
 
 //words, that be all the time in the list, because they are suggestet any time
 let all_words_fix = [];

@@ -1,9 +1,9 @@
 // hover funktion
 const vscode = require("vscode");
-const {loadCompletitionItems} = require("../utils");
+const { readJsonFile } = require("../utils");
 
 // read json file
-const completitionItems = loadCompletitionItems();
+const completitionItems = readJsonFile("completitionItems.json");
 
 const hoverProvider = vscode.languages.registerHoverProvider("tcl", {
   provideHover(document, position) {

@@ -1,7 +1,7 @@
 // words from completitionsItems.json, that will be suggested all the time
   
 const vscode = require("vscode");
-const {loadCompletitionItems} = require("../utils");
+const { readJsonFile } = require("../utils");
 
 // icon Map for completionItems
 const iconMapping = {
@@ -24,9 +24,8 @@ const iconMapping = {
   Value: vscode.CompletionItemKind.Value,
 };
 
-
 // read json file
-const completitionItems = loadCompletitionItems();
+const completitionItems = readJsonFile("completitionItems.json");
 let providerList = [];
 
 
