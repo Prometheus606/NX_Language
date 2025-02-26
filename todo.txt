@@ -1,2 +1,2 @@
-- linter und extension im ganzen workspace laufen lassen
-- alle farben anpassbar machen
+- linter fehler beheben
+- auto suggestions aus allen dateien nehmen

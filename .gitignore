@@ -132,3 +132,5 @@ dist
 .dist
 server/wwwroot
 src/dictionary.json
+test
+test/test.tcl

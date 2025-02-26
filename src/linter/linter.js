@@ -1,23 +1,7 @@
 // ##################### Linter (Fehlersuche für Variablen) #####################
 const { rules } = require("./linterRules");
-const { loadCompletitionItems, loadIgnoreItems, getFilesInWorkspace } = require("../utils");
-const vscode = require('vscode');
-
-// let globalVariables = new Set(); // Alle bekannten globalen Variablen
-// let functionScopes = []; // Aktive Funktionen
-// let diagnostics = [];
-
-// async function test(document) {
-//   globalVariables = new Set(); // Alle bekannten globalen Variablen
-//   functionScopes = []; // Aktive Funktionen
-//   diagnostics = [];
-//   const files = getFilesInWorkspace(vscode.workspace.workspaceFolders)
-//   for (const file of files) {
-//     let document = await vscode.workspace.openTextDocument(file);
-//     await runLinter(document)
-//   }
-//   return {diagnostics}
-// }
+const { readJsonFile, getFilesInWorkspace } = require("../utils");
+const vscode = require("vscode");
 
 async function runLinter(document) {
   const text = document.getText();
@@ -25,9 +9,12 @@ async function runLinter(document) {
   let globalVariables = new Set(); // Alle bekannten globalen Variablen
   let functionScopes = []; // Aktive Funktionen
   const lines = text.split("\n");
+  let insideFunction = false; // Ist der Parser in einer Funktion?
+  let braceCount = 0;
 
   // Regeln für allgemeine Linter-Überprüfung aus der rules datei
   lines.forEach((line, lineNumber) => {
+    if (line.startsWith("#")) line = "";
     rules.forEach(({ regex, severity, message }) => {
       const match = line.match(regex);
       if (match) {
@@ -51,34 +38,47 @@ async function runLinter(document) {
   const pairs = { "{": "}", "(": ")", '"': '"' };
 
   lines.forEach((line, lineNumber) => {
+    if (line.startsWith("#")) line = "";
+
     for (let i = 0; i < line.length; i++) {
       let char = line[i];
-      if (char in pairs) {
-        if (
-          char === '"' &&
-          stack.length > 0 &&
-          stack[stack.length - 1].char === '"'
-        ) {
-          stack.pop();
-        } else {
-          stack.push({ char, line: lineNumber, character: i });
-        }
-      } else if (Object.values(pairs).includes(char)) {
-        if (
-          stack.length === 0 ||
-          pairs[stack[stack.length - 1].char] !== char
-        ) {
-          diagnostics.push({
-            severity: 1,
-            range: {
-              start: { line: lineNumber, character: i },
-              end: { line: lineNumber, character: i + 1 },
-            },
-            message: `Fehlende öffnende Klammer oder Anführungszeichen für '${char}'.`,
-            source: "tcl-linter",
-          });
-        } else {
-          stack.pop();
+
+      // Prüfe, ob das Zeichen durch einen Backslash maskiert ist
+      let escaped = false;
+      let backslashCount = 0;
+      for (let j = i - 1; j >= 0 && line[j] === "\\"; j--) {
+        backslashCount++;
+      }
+      escaped = backslashCount % 2 !== 0; // Falls ungerade Anzahl, ist das Zeichen maskiert
+
+      if (!escaped) {
+        if (char in pairs) {
+          if (
+            char === '"' &&
+            stack.length > 0 &&
+            stack[stack.length - 1].char === '"'
+          ) {
+            stack.pop();
+          } else {
+            stack.push({ char, line: lineNumber, character: i });
+          }
+        } else if (Object.values(pairs).includes(char)) {
+          if (
+            stack.length === 0 ||
+            pairs[stack[stack.length - 1].char] !== char
+          ) {
+            diagnostics.push({
+              severity: 1,
+              range: {
+                start: { line: lineNumber, character: i },
+                end: { line: lineNumber, character: i + 1 },
+              },
+              message: `Fehlende öffnende Klammer oder Anführungszeichen für '${char}'.`,
+              source: "tcl-linter",
+            });
+          } else {
+            stack.pop();
+          }
         }
       }
     }
@@ -98,25 +98,29 @@ async function runLinter(document) {
   });
 
   // ================== Variablen erkennung ================================
-  let insideFunction = false; // Ist der Parser in einer Funktion?
-  let braceCount = 0;
 
   // get variables from completitionItems json file
-  const completitionItems = loadCompletitionItems();
+  const completitionItems = readJsonFile("completitionItems.json");
   completitionItems.provideCompletionItems.mom.forEach((item) => {
     if (item.command) {
       globalVariables.add(item.command);
     }
   });
 
-  // get variables from dictionary json file
-  const ignoreDictionary = loadIgnoreItems();
+  // get variables from linterignore json file
+  const ignoreDictionary = readJsonFile("linterignore.json");
   ignoreDictionary.forEach((item) => {
-      globalVariables.add(item);
+    globalVariables.add(item);
+  });
+
+  // get variables from linterignore_custom json file
+  const ignoreDictionaryCustom = readJsonFile("linterignore_custom.json");
+  ignoreDictionaryCustom.forEach((item) => {
+    globalVariables.add(item);
   });
 
   // read variables in all files in workspace
-  const files = getFilesInWorkspace(vscode.workspace.workspaceFolders)
+  const files = getFilesInWorkspace(vscode.workspace.workspaceFolders);
   for (const file of files) {
     let document = await vscode.workspace.openTextDocument(file);
     const text = document.getText();
@@ -125,33 +129,46 @@ async function runLinter(document) {
     let braceCount = 0;
 
     lines.forEach((line, lineNumber) => {
-      const functionDef = line.match(/^proc\s+(\w+)\s*\{([^}]*)\}/);
-    if (functionDef) {
+      if (line.startsWith("#")) line = "";
+      const functionDef = line.match(/^proc\s+(\w+)\s*\{([\s\S]*)\}/);
+      if (functionDef) {
         insideFunction = true;
         braceCount = 1; // Start-Klammer erkannt
-
         const functionName = functionDef[1];
-        const args = functionDef[2]
-            .split(/\s+/)
-            .filter(arg => arg.trim() !== ""); // Leere Einträge filtern
+        const rawArgs = functionDef[2].trim();
+
+        let args = [];
+        let regex = /\{(\w+)\s+[^}]+\}|(\w+)/g;
+        let match;
+
+        while ((match = regex.exec(rawArgs)) !== null) {
+          if (match[1]) {
+            // Falls eine Liste erkannt wurde, das erste Wort extrahieren
+            args.push(match[1]);
+          } else if (match[2]) {
+            // Einzelne Argumente hinzufügen
+            args.push(match[2]);
+          }
+        }
 
         functionScopes.push({
-            lineNumber,
-            functionName,
+          lineNumber,
+          functionName,
           localGlobals: new Set(args), // Argumente als lokale Variablen speichern
-          loopScopes: [], 
+          loopScopes: [],
+          scopeStack: [],
         });
-    }
+      }
 
-    // Klammern zählen
-    braceCount += (line.match(/{/g) || []).length;
-    braceCount -= (line.match(/}/g) || []).length;
+      // Klammern zählen
+      braceCount += (line.match(/{/g) || []).length;
+      braceCount -= (line.match(/}/g) || []).length;
 
-    // Prüfen, ob eine Funktion endet
-    if (insideFunction && braceCount === 0) {
+      // Prüfen, ob eine Funktion endet
+      if (insideFunction && braceCount === 0) {
         insideFunction = false;
       }
-      
+
       // Erfassen globaler Variablen mit `set` außerhalb einer `proc`
       if (!insideFunction) {
         const setMatch = line.match(/set\s+(\w+)/);
@@ -177,23 +194,57 @@ async function runLinter(document) {
   document = await vscode.workspace.openTextDocument(document);
 
   lines.forEach((line, lineNumber) => {
+    if (line.startsWith("#")) line = "";
     // Funktionsbeginn erkennen
-    const functionDef = line.match(/^proc\s+(\w+)\s*\{([^}]*)\}/);
+    const functionDef = line.match(/^proc\s+(\w+)\s*\{([\s\S]*)\}/);
     if (functionDef) {
-        insideFunction = true;
-        braceCount = 1; // Start-Klammer erkannt
+      insideFunction = true;
+      braceCount = 1; // Start-Klammer erkannt
+      const functionName = functionDef[1];
 
-        const functionName = functionDef[1];
-        const args = functionDef[2]
-            .split(/\s+/)
-            .filter(arg => arg.trim() !== ""); // Leere Einträge filtern
+      const rawArgs = functionDef[2].trim();
 
-        functionScopes.push({
-            lineNumber,
-            functionName,
-          localGlobals: new Set(args), // Argumente als lokale Variablen speichern
-          loopScopes: [], 
-        });
+      let args = [];
+      let regex = /\{(\w+)\s+[^}]+\}|(\w+)/g;
+      let match;
+
+      while ((match = regex.exec(rawArgs)) !== null) {
+        if (match[1]) {
+          // Falls eine Liste erkannt wurde, das erste Wort extrahieren
+          args.push(match[1]);
+        } else if (match[2]) {
+          // Einzelne Argumente hinzufügen
+          args.push(match[2]);
+        }
+      }
+
+      functionScopes.push({
+        lineNumber,
+        functionName,
+        localGlobals: new Set(args), // Argumente als lokale Variablen speichern
+        loopScopes: [],
+        scopeStack: [],
+      });
+    }
+
+    if (!insideFunction) {
+      const setMatch = line.match(/set\s+(\w+)/);
+      if (setMatch) globalVariables.add(setMatch[1]);
+    }
+
+    const globalSetMatch = line.match(/set\s+::(\w+)/);
+    if (globalSetMatch) globalVariables.add(globalSetMatch[1]);
+
+    // Erfassen von `global var1 var2`
+    const globalKeywordMatch = line.match(/^\s*global\s+(.+)/);
+    if (globalKeywordMatch && insideFunction) {
+      const currentFunction = functionScopes[functionScopes.length - 1];
+      globalKeywordMatch[1].split(/\s+/).forEach((varName) => {
+        if (varName.trim().length > 0) {
+          currentFunction.localGlobals.add(varName.trim());
+          globalVariables.add(varName.trim()); // Direkt auch als global markieren
+        }
+      });
     }
 
     // Klammern zählen
@@ -202,72 +253,107 @@ async function runLinter(document) {
 
     // Prüfen, ob eine Funktion endet
     if (insideFunction && braceCount === 0) {
-        insideFunction = false;
+      insideFunction = false;
     }
   });
 
-  // Durchgang 1: Erfassen globaler Variablen
-    lines.forEach((line, lineNumber) => {
-      // Erfassen globaler Variablen mit `set` außerhalb einer `proc`
-      if (!insideFunction) {
-        const setMatch = line.match(/set\s+(\w+)/);
-        if (setMatch) globalVariables.add(setMatch[1]);
-
-        const globalSetMatch = line.match(/set\s+::(\w+)/);
-        if (globalSetMatch) globalVariables.add(globalSetMatch[1]);
-      }
-
-      // Erfassen von `global var1 var2`
-      const globalKeywordMatch = line.match(/^\s*global\s+(.+)/);
-      if (globalKeywordMatch && insideFunction) {
-        const currentFunction = functionScopes[functionScopes.length - 1];
-        globalKeywordMatch[1].split(/\s+/).forEach((varName) => {
-          if (varName.trim().length > 0) {
-            currentFunction.localGlobals.add(varName.trim());
-            globalVariables.add(varName.trim()); // Direkt auch als global markieren
-          }
-        });
-      }
-    });
-
+  insideFunction = false;
+  braceCount = 0;
+  let currentFunction;
   // Überprüfung der Variablenverwendung
   lines.forEach((line, lineNumber) => {
+    if (line.startsWith("#")) line = "";
     const varPattern = /(?<!\\)\$(\??(::)?(\w+))/g;
     let varMatch;
-    let currentFunction = functionScopes.length > 0 ? functionScopes[functionScopes.length - 1] : null;
+
+    const functionDef = line.match(/^proc\s+(\w+)\s*\{([\s\S]*)\}/);
+    if (functionDef) {
+      insideFunction = true;
+      braceCount = 1; // Start-Klammer erkannt
+      const functionName = functionDef[1];
+      currentFunction = functionScopes.find(
+        (i) => i.functionName == functionName
+      );
+    }
+
+    // Klammern zählen
+    braceCount += (line.match(/{/g) || []).length;
+    braceCount -= (line.match(/}/g) || []).length;
+
+    // Prüfen, ob eine Funktion endet
+    if (insideFunction && braceCount === 0) {
+      insideFunction = false;
+    }
 
     // Erfassen lokaler Variablen mit `set` innerhalb einer `proc`
-    if (insideFunction) {
+    if (insideFunction && currentFunction) {
       const setMatch = line.match(/set\s+(\w+)/);
       if (setMatch) currentFunction.localGlobals.add(setMatch[1]);
 
       const globalSetMatch = line.match(/set\s+::(\w+)/);
       if (globalSetMatch) currentFunction.localGlobals.add(globalSetMatch[1]);
-  }
-
-    // Foreach-Schleife erkennen
-    const foreachMatch = line.match(/^\s*foreach\s+(\w+)\s+\S+\s*\{/);
-    if (foreachMatch && insideFunction) {
-        const loopVar = foreachMatch[1];
-        
-
-        // Neuen Loop-Scope erstellen
-        currentFunction.loopScopes.push({
-            lineNumber,
-            loopVariables: new Set([loopVar]),
-        });
-      
     }
 
-    // For-Schleife erkennen (Format: for {set i 0} {$i < 10} {incr i} { )
-    const forMatch = line.match(/^\s*for\s*\{\s*set\s+(\w+)\s+/);
-    if (forMatch && insideFunction) {
-        const loopVar = forMatch[1];
+    // Foreach-Schleife erkennen
+    const foreachMatch = line.match(/^\s*foreach\s+(\w+)\s+\S+\s*/);
+    if (foreachMatch && insideFunction && currentFunction) {
+      const loopVar = foreachMatch[1];
 
-        currentFunction.loopScopes.push({
-            lineNumber,
-            loopVariables: new Set([loopVar]),
-        });
+      // **Neuen Loop-Scope erstellen (für `{}`-Blöcke sichtbar machen)**
+      currentFunction.scopeStack.push({
+        type: "foreach",
+        lineNumber,
+        loopVariables: new Set([loopVar]),
+        parentVariables: new Set([...currentFunction.localGlobals]),
+      });
+    }
+
+    // ForEach-Schleife erkennen mit dem format foreach {key value} ...
+    const foreachMatch1 = line.match(/^\s*foreach\s+\{(\w+)\s+(\w+)\}\s*/);
+    if (foreachMatch1 && insideFunction && currentFunction) {
+      const loopVars = [foreachMatch1[1], foreachMatch1[2]];
+
+      // **Neuen For-Loop-Scope erstellen (für `{}`-Blöcke sichtbar machen)**
+      currentFunction.scopeStack.push({
+        type: "foreach",
+        lineNumber,
+        loopVariables: new Set(loopVars),
+        parentVariables: new Set([...currentFunction.localGlobals]),
+      });
+    }
+
+    // For-Schleife erkennen
+    const forMatch = line.match(/^\s*for\s*\{\s*set\s+(\w+)\s+/);
+    if (forMatch && insideFunction && currentFunction) {
+      const loopVar = forMatch[1];
+
+      // **Neuen For-Loop-Scope erstellen (für `{}`-Blöcke sichtbar machen)**
+      currentFunction.scopeStack.push({
+        type: "for",
+        lineNumber,
+        loopVariables: new Set([loopVar]),
+        parentVariables: new Set([...currentFunction.localGlobals]),
+      });
+    }
+
+    // **Allgemeine `{`-Blöcke erkennen (if, while, etc.)**
+    if (line.trim().endsWith("{") && insideFunction && currentFunction) {
+      currentFunction.scopeStack.push({
+        type: "block",
+        lineNumber,
+        loopVariables: new Set(),
+        parentVariables: new Set([...currentFunction.localGlobals]),
+      });
+    }
+
+    // **Block-Ende `}` erkennen**
+    if (insideFunction && currentFunction && line.trim() === "}") {
+      if (currentFunction.scopeStack.length > 0) {
+        let lastScope = currentFunction.scopeStack.pop();
+        for (let varName of lastScope.loopVariables) {
+          currentFunction.localGlobals.delete(varName);
+        }
+      }
     }
 
     // Funktionsaufrufe mit return variable
@@ -284,51 +370,52 @@ async function runLinter(document) {
       line.match(/^\s*MTX3_init_x_y_z\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)/),
       line.match(/^\s*VEC3_init\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)/),
       line.match(/^\s*VEC3_init_s\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)/),
+      line.match(/^\s*VMOV\s+(\S+)\s+(\S+)\s+(\S+)/),
       line.match(/^\s*Cx\w*\s+"get"\s+(\S+)/),
+      line.match(/^\s*upvar\s+(\S+)\s+(\S+)/),
     ];
-    customFuncMatches.forEach(customFuncMatch => {
+    customFuncMatches.forEach((customFuncMatch) => {
       if (customFuncMatch && insideFunction && currentFunction) {
-          const returnVar = customFuncMatch[customFuncMatch.length - 1]; // Letzte Variable ist der Return-Wert
-          currentFunction.localGlobals.add(returnVar); 
-        }
-    });
-    
-      // Prüfen, ob eine Schleife endet und die Variablen entfernen
-      if (insideFunction && line.trim() === "}") {
-        if (currentFunction.loopScopes.length > 0) {
-          let lastLoopScope = currentFunction.loopScopes.pop();
-          
-          for (let varName of lastLoopScope.loopVariables) {
-            currentFunction.localGlobals.delete(varName);
-          }
-        }
+        const returnVar = customFuncMatch[customFuncMatch.length - 1]; // Letzte Variable ist der Return-Wert
+        currentFunction.localGlobals.add(returnVar);
       }
+    });
 
-
+    // **Variable-Verwendung überprüfen**
     while ((varMatch = varPattern.exec(line)) !== null) {
       const isGlobal = !!varMatch[2]; // Hat die Variable `::` als Präfix?
       const variable = varMatch[3];
 
-      // **Korrektur 1:** Wenn `::`-Variable existiert, ist sie automatisch korrekt.
       if (isGlobal && globalVariables.has(variable)) continue;
-
-      // **Korrektur 2:** Falls `variable` außerhalb einer `proc` gesetzt wurde, ist sie automatisch global.
       if (!isGlobal && globalVariables.has(variable)) continue;
-
-      // **Korrektur 3:** Falls `variable` innerhalb einer `proc` mit `global` markiert wurde, ist sie gültig.
-      if (currentFunction && currentFunction.localGlobals.has(variable)) continue;
-      
       if (
+        insideFunction &&
         currentFunction &&
-        currentFunction.loopScopes.some(scope => scope.loopVariables.has(variable))
-      ) continue;
-    
-      
-      // **Korrektur 4:** Falls `variable` innerhalb einer anderen `proc` global markiert wurde, ist sie gültig.
-      let ExistsInAnotherFunction = functionScopes.some(scope => scope.localGlobals.has(variable));
-      if (ExistsInAnotherFunction) continue;
-    
-      // Fehlerfall: Die Variable ist weder global noch korrekt deklariert.
+        currentFunction.localGlobals.has(variable)
+      ) {
+        continue;
+      } else {
+        if (currentFunction && !currentFunction.localGlobals.has(variable)) {
+        }
+      }
+
+      // Überprüfung innerhalb verschachtelter `{}`-Blöcke
+      if (
+        insideFunction &&
+        currentFunction &&
+        currentFunction.scopeStack.some(
+          (scope) =>
+            scope.loopVariables.has(variable) ||
+            scope.parentVariables.has(variable)
+        )
+      )
+        continue;
+
+      // let ExistsInAnotherFunction = functionScopes.some((scope) =>
+      //   scope.localGlobals.has(variable)
+      // );
+      // if (ExistsInAnotherFunction) continue;
+
       diagnostics.push({
         severity: 1,
         range: {
