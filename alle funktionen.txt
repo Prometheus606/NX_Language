@@ -8,3 +8,4 @@
 - snippets
 - Syntax highlighting mit anpassbaren farben
 - gliederungsleiste mit Funktionen und buffern
+- farben anpassbar
