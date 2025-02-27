@@ -1,7 +1,7 @@
 - linter, für variablennamen, klammern, Anführungszeichen
 - variablen zum Wörterbuch hinzufügen mit rechtsklick
 - automatisch formatieren mit rechtsklick
-- Auto suggestions mit mom variablen und Prozeduren, und mit selbst geschriebenen Prozeduren und variablen
+- Auto suggestions mit mom variablen und Prozeduren, und mit selbst geschriebenen Prozeduren und variablen aus allen dateien im workspace
 - hover Funktion
 - go to Definition Funktion mit rechtsklick
 - nach allen vorkommnisen suchen mit rechtsklick
