@@ -14,7 +14,7 @@ async function runLinter(document) {
 
   // Regeln für allgemeine Linter-Überprüfung aus der rules datei
   lines.forEach((line, lineNumber) => {
-    if (line.startsWith("#")) line = "";
+    if (line.trim().startsWith("#")) line = "";
     rules.forEach(({ regex, severity, message }) => {
       const match = line.match(regex);
       if (match) {
@@ -38,7 +38,7 @@ async function runLinter(document) {
   const pairs = { "{": "}", "(": ")", '"': '"' };
 
   lines.forEach((line, lineNumber) => {
-    if (line.startsWith("#")) line = "";
+    if (line.trim().startsWith("#")) line = "";
 
     for (let i = 0; i < line.length; i++) {
       let char = line[i];
@@ -120,7 +120,10 @@ async function runLinter(document) {
   });
 
   // read variables in all files in workspace
-  const files = getFilesInWorkspace(vscode.workspace.workspaceFolders);
+  let files = getFilesInWorkspace(vscode.workspace.workspaceFolders);
+  if (!files || files.length == 0) {
+    files = [document.uri];
+  }
   for (const file of files) {
     let document = await vscode.workspace.openTextDocument(file);
     const text = document.getText();
@@ -129,7 +132,7 @@ async function runLinter(document) {
     let braceCount = 0;
 
     lines.forEach((line, lineNumber) => {
-      if (line.startsWith("#")) line = "";
+      if (line.trim().startsWith("#")) line = "";
       const functionDef = line.match(/^proc\s+(\w+)\s*\{([\s\S]*)\}/);
       if (functionDef) {
         insideFunction = true;
@@ -173,10 +176,10 @@ async function runLinter(document) {
       if (!insideFunction) {
         const setMatch = line.match(/set\s+(\w+)/);
         if (setMatch) globalVariables.add(setMatch[1]);
-
-        const globalSetMatch = line.match(/set\s+::(\w+)/);
-        if (globalSetMatch) globalVariables.add(globalSetMatch[1]);
       }
+
+      const globalSetMatch = line.match(/set\s+::(\w+)/);
+      if (globalSetMatch) globalVariables.add(globalSetMatch[1]);
 
       // Erfassen von `global var1 var2`
       const globalKeywordMatch = line.match(/^\s*global\s+(.+)/);
@@ -191,78 +194,13 @@ async function runLinter(document) {
       }
     });
   }
-  document = await vscode.workspace.openTextDocument(document);
-
-  lines.forEach((line, lineNumber) => {
-    if (line.startsWith("#")) line = "";
-    // Funktionsbeginn erkennen
-    const functionDef = line.match(/^proc\s+(\w+)\s*\{([\s\S]*)\}/);
-    if (functionDef) {
-      insideFunction = true;
-      braceCount = 1; // Start-Klammer erkannt
-      const functionName = functionDef[1];
-
-      const rawArgs = functionDef[2].trim();
-
-      let args = [];
-      let regex = /\{(\w+)\s+[^}]+\}|(\w+)/g;
-      let match;
-
-      while ((match = regex.exec(rawArgs)) !== null) {
-        if (match[1]) {
-          // Falls eine Liste erkannt wurde, das erste Wort extrahieren
-          args.push(match[1]);
-        } else if (match[2]) {
-          // Einzelne Argumente hinzufügen
-          args.push(match[2]);
-        }
-      }
-
-      functionScopes.push({
-        lineNumber,
-        functionName,
-        localGlobals: new Set(args), // Argumente als lokale Variablen speichern
-        loopScopes: [],
-        scopeStack: [],
-      });
-    }
-
-    if (!insideFunction) {
-      const setMatch = line.match(/set\s+(\w+)/);
-      if (setMatch) globalVariables.add(setMatch[1]);
-    }
-
-    const globalSetMatch = line.match(/set\s+::(\w+)/);
-    if (globalSetMatch) globalVariables.add(globalSetMatch[1]);
-
-    // Erfassen von `global var1 var2`
-    const globalKeywordMatch = line.match(/^\s*global\s+(.+)/);
-    if (globalKeywordMatch && insideFunction) {
-      const currentFunction = functionScopes[functionScopes.length - 1];
-      globalKeywordMatch[1].split(/\s+/).forEach((varName) => {
-        if (varName.trim().length > 0) {
-          currentFunction.localGlobals.add(varName.trim());
-          globalVariables.add(varName.trim()); // Direkt auch als global markieren
-        }
-      });
-    }
-
-    // Klammern zählen
-    braceCount += (line.match(/{/g) || []).length;
-    braceCount -= (line.match(/}/g) || []).length;
-
-    // Prüfen, ob eine Funktion endet
-    if (insideFunction && braceCount === 0) {
-      insideFunction = false;
-    }
-  });
 
   insideFunction = false;
   braceCount = 0;
   let currentFunction;
   // Überprüfung der Variablenverwendung
   lines.forEach((line, lineNumber) => {
-    if (line.startsWith("#")) line = "";
+    if (line.trim().startsWith("#")) line = "";
     const varPattern = /(?<!\\)\$(\??(::)?(\w+))/g;
     let varMatch;
 
